@@ -30,4 +30,9 @@ impl FileListState {
     pub fn selected(&self) -> Option<&String> {
         self.files.get(self.selected_index)
     }
+
+    pub fn set_files(&mut self, files: Vec<String>) {
+        self.files = files;
+        self.selected_index = 0;
+    }
 }

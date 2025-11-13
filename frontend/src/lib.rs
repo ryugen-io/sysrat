@@ -7,9 +7,10 @@ mod ui;
 mod version;
 
 use ratzilla::{DomBackend, WebRenderer};
-use state::AppState;
+use state::{AppState, Pane};
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::prelude::*;
+use wasm_bindgen_futures::spawn_local;
 
 #[wasm_bindgen(start)]
 pub fn main() -> Result<(), JsValue> {
@@ -24,10 +25,32 @@ pub fn main() -> Result<(), JsValue> {
     let terminal =
         ratzilla::ratatui::Terminal::new(backend).map_err(|e| JsValue::from_str(&e.to_string()))?;
 
-    // Show welcome message
+    // Show welcome message and load file list if needed
     {
-        let mut state = app_state.borrow_mut();
-        state.set_status("Welcome to Config Manager");
+        let state = app_state.borrow();
+        let should_load_files = state.focus != Pane::Menu;
+        drop(state);
+
+        if should_load_files {
+            // Load file list if we restored to FileList or Editor
+            let state_clone = Rc::clone(&app_state);
+            spawn_local(async move {
+                match api::fetch_file_list().await {
+                    Ok(files) => {
+                        let mut st = state_clone.borrow_mut();
+                        st.file_list.set_files(files);
+                        st.set_status("Restored session");
+                    }
+                    Err(e) => {
+                        let mut st = state_clone.borrow_mut();
+                        st.set_status(format!("Error loading files: {:?}", e));
+                    }
+                }
+            });
+        } else {
+            let mut state = app_state.borrow_mut();
+            state.set_status("Welcome to Config Manager");
+        }
     }
 
     // Set up key event handler

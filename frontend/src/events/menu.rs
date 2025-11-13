@@ -24,7 +24,7 @@ pub fn handle_keys(state: &mut AppState, state_rc: &Rc<RefCell<AppState>>, key_e
                                 match api::fetch_file_list().await {
                                     Ok(files) => {
                                         let mut st = state_clone.borrow_mut();
-                                        st.file_list.files = files;
+                                        st.file_list.set_files(files);
                                         st.set_status("Loaded file list");
                                     }
                                     Err(e) => {
