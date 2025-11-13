@@ -1,15 +1,13 @@
-use super::types::{
+use super::validation::{build_config_path, config_dir, validate_filename};
+use crate::routes::types::{
     FileContentResponse, FileListResponse, WriteConfigRequest, WriteConfigResponse,
 };
 use axum::{Json, extract::Path, http::StatusCode};
 
-// Config file directory - could be made configurable
-const CONFIG_DIR: &str = "/tmp/config-manager-configs";
-
-// GET /api/configs - List all config files
+/// GET /api/configs - List all config files
 pub async fn list_configs() -> Result<Json<FileListResponse>, (StatusCode, String)> {
     // Ensure config directory exists
-    tokio::fs::create_dir_all(CONFIG_DIR).await.map_err(|e| {
+    tokio::fs::create_dir_all(config_dir()).await.map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
             format!("Failed to create config dir: {}", e),
@@ -17,7 +15,7 @@ pub async fn list_configs() -> Result<Json<FileListResponse>, (StatusCode, Strin
     })?;
 
     let mut files = Vec::new();
-    let mut dir = tokio::fs::read_dir(CONFIG_DIR).await.map_err(|e| {
+    let mut dir = tokio::fs::read_dir(config_dir()).await.map_err(|e| {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
             format!("Failed to read directory: {}", e),
@@ -42,24 +40,13 @@ pub async fn list_configs() -> Result<Json<FileListResponse>, (StatusCode, Strin
     Ok(Json(FileListResponse { files }))
 }
 
-// GET /api/configs/:filename - Read a config file
+/// GET /api/configs/:filename - Read a config file
 pub async fn read_config(
     Path(filename): Path<String>,
 ) -> Result<Json<FileContentResponse>, (StatusCode, String)> {
-    // Security: Validate filename (no path traversal)
-    if filename.contains("..") || filename.contains('/') || filename.contains('\\') {
-        return Err((StatusCode::BAD_REQUEST, "Invalid filename".into()));
-    }
+    validate_filename(&filename)?;
 
-    // Only allow .conf and .toml files
-    if !filename.ends_with(".conf") && !filename.ends_with(".toml") {
-        return Err((
-            StatusCode::BAD_REQUEST,
-            "Only .conf and .toml files allowed".into(),
-        ));
-    }
-
-    let path = format!("{}/{}", CONFIG_DIR, filename);
+    let path = build_config_path(&filename);
 
     match tokio::fs::read_to_string(&path).await {
         Ok(content) => Ok(Json(FileContentResponse { content })),
@@ -74,25 +61,14 @@ pub async fn read_config(
     }
 }
 
-// POST /api/configs/:filename - Write a config file
+/// POST /api/configs/:filename - Write a config file
 pub async fn write_config(
     Path(filename): Path<String>,
     Json(payload): Json<WriteConfigRequest>,
 ) -> Result<Json<WriteConfigResponse>, (StatusCode, String)> {
-    // Security: Validate filename
-    if filename.contains("..") || filename.contains('/') || filename.contains('\\') {
-        return Err((StatusCode::BAD_REQUEST, "Invalid filename".into()));
-    }
+    validate_filename(&filename)?;
 
-    // Only allow .conf and .toml files
-    if !filename.ends_with(".conf") && !filename.ends_with(".toml") {
-        return Err((
-            StatusCode::BAD_REQUEST,
-            "Only .conf and .toml files allowed".into(),
-        ));
-    }
-
-    let path = format!("{}/{}", CONFIG_DIR, filename);
+    let path = build_config_path(&filename);
 
     // Create backup before writing (if file exists)
     let backup_path = format!("{}.backup", path);
