@@ -30,8 +30,8 @@ async fn main() {
     let app = Router::new()
         // API routes
         .route("/api/configs", get(routes::list_configs))
-        .route("/api/configs/:filename", get(routes::read_config))
-        .route("/api/configs/:filename", post(routes::write_config))
+        .route("/api/configs/*filename", get(routes::read_config))
+        .route("/api/configs/*filename", post(routes::write_config))
         .route("/api/containers", get(routes::list_containers))
         .route("/api/containers/:id/start", post(routes::start_container))
         .route("/api/containers/:id/stop", post(routes::stop_container))
@@ -49,8 +49,8 @@ async fn main() {
     println!("Server running on http://0.0.0.0:3000 (accessible at http://10.1.1.30:3000)");
     println!("API endpoints:");
     println!("  GET  /api/configs");
-    println!("  GET  /api/configs/:filename");
-    println!("  POST /api/configs/:filename");
+    println!("  GET  /api/configs/*filename");
+    println!("  POST /api/configs/*filename");
     println!("  GET  /api/containers");
     println!("  POST /api/containers/:id/start");
     println!("  POST /api/containers/:id/stop");

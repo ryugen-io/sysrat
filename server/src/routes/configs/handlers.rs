@@ -27,15 +27,18 @@ pub async fn list_configs(
     Ok(Json(FileListResponse { files }))
 }
 
-/// GET /api/configs/:filename - Read a config file
+/// GET /api/configs/*filename - Read a config file
 pub async fn read_config(
     State(config): State<SharedConfig>,
     Path(filename): Path<String>,
 ) -> Result<Json<FileContentResponse>, (StatusCode, String)> {
-    validate_filename(&filename)?;
+    // Wildcard routes include leading slash, strip it
+    let filename = filename.strip_prefix('/').unwrap_or(&filename);
+
+    validate_filename(filename)?;
 
     // Look up file in config
-    let file_config = config.get_file(&filename).ok_or((
+    let file_config = config.get_file(filename).ok_or((
         StatusCode::NOT_FOUND,
         format!("File not found in config: {}", filename),
     ))?;
@@ -55,16 +58,19 @@ pub async fn read_config(
     }
 }
 
-/// POST /api/configs/:filename - Write a config file
+/// POST /api/configs/*filename - Write a config file
 pub async fn write_config(
     State(config): State<SharedConfig>,
     Path(filename): Path<String>,
     Json(payload): Json<WriteConfigRequest>,
 ) -> Result<Json<WriteConfigResponse>, (StatusCode, String)> {
-    validate_filename(&filename)?;
+    // Wildcard routes include leading slash, strip it
+    let filename = filename.strip_prefix('/').unwrap_or(&filename);
+
+    validate_filename(filename)?;
 
     // Look up file in config
-    let file_config = config.get_file(&filename).ok_or((
+    let file_config = config.get_file(filename).ok_or((
         StatusCode::NOT_FOUND,
         format!("File not found in config: {}", filename),
     ))?;
