@@ -1,8 +1,15 @@
 use serde::{Deserialize, Serialize};
 
+#[derive(Deserialize, Serialize, Clone)]
+pub struct FileInfo {
+    pub name: String,
+    pub description: String,
+    pub readonly: bool,
+}
+
 #[derive(Deserialize)]
 pub(super) struct FileListResponse {
-    pub files: Vec<String>,
+    pub files: Vec<FileInfo>,
 }
 
 #[derive(Deserialize)]

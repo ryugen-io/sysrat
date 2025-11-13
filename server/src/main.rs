@@ -1,3 +1,4 @@
+mod config;
 mod routes;
 mod version;
 
@@ -5,11 +6,27 @@ use axum::{
     Router,
     routing::{get, post},
 };
+use std::sync::Arc;
 use tower_http::services::ServeDir;
 
 #[tokio::main]
 async fn main() {
     println!("{}", version::version_string());
+
+    // Load configuration
+    let app_config = match config::AppConfig::load() {
+        Ok(cfg) => Arc::new(cfg),
+        Err(e) => {
+            eprintln!("Failed to load configuration: {}", e);
+            eprintln!("Make sure config-manager.toml exists in the current directory");
+            std::process::exit(1);
+        }
+    };
+
+    println!(
+        "Loaded {} config files from config-manager.toml",
+        app_config.list_files().len()
+    );
     let app = Router::new()
         // API routes
         .route("/api/configs", get(routes::list_configs))
@@ -22,6 +39,8 @@ async fn main() {
             "/api/containers/:id/restart",
             post(routes::restart_container),
         )
+        // Pass config as state
+        .with_state(app_config)
         // Static files (frontend)
         .nest_service("/", ServeDir::new("frontend/dist"));
 

@@ -1,0 +1,32 @@
+# Config Manager - Meta Configuration
+# Define which system files to manage
+
+# Each file entry specifies:
+# - path: Absolute path to the file on the system
+# - name: Display name in the UI (must end with .conf or .toml)
+# - description: Optional description
+# - readonly: Optional, if true the file cannot be edited
+
+[[files]]
+path = "/etc/nginx/nginx.conf"
+name = "nginx.conf"
+description = "Nginx main configuration"
+
+[[files]]
+path = "/etc/docker/daemon.json"
+name = "docker-daemon.toml"
+description = "Docker daemon configuration"
+
+[[files]]
+path = "/etc/ssh/sshd_config"
+name = "sshd.conf"
+description = "SSH daemon configuration"
+readonly = true
+
+# Example: User configs
+[[files]]
+path = "/home/pl/.config/hypr/hyprland.conf"
+name = "hyprland.conf"
+description = "Hyprland configuration"
+
+# You can add more files here!

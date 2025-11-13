@@ -34,7 +34,22 @@ impl ContainerListState {
     }
 
     pub fn set_containers(&mut self, containers: Vec<ContainerInfo>) {
+        // Preserve selection by container ID
+        let selected_id = self._selected().map(|c| c.id.clone());
+
         self.containers = containers;
-        self.selected_index = 0;
+
+        // Try to restore previous selection
+        if let Some(id) = selected_id
+            && let Some(pos) = self.containers.iter().position(|c| c.id == id)
+        {
+            self.selected_index = pos;
+            return;
+        }
+
+        // Fallback: Keep index within bounds
+        if self.selected_index >= self.containers.len() && !self.containers.is_empty() {
+            self.selected_index = self.containers.len() - 1;
+        }
     }
 }

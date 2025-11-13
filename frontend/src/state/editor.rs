@@ -17,9 +17,12 @@ impl EditorState {
 
     pub fn load_content(&mut self, filename: String, content: String) {
         self.current_file = Some(filename);
-        self.original_content = content.clone();
 
+        // Normalize content: split into lines and rejoin
+        // This ensures original_content matches what textarea.lines().join("\n") produces
         let lines: Vec<String> = content.lines().map(|s| s.to_string()).collect();
+        self.original_content = lines.join("\n");
+
         self.textarea = TextArea::new(lines);
     }
 

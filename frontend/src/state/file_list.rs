@@ -1,5 +1,7 @@
+use crate::api::FileInfo;
+
 pub struct FileListState {
-    pub files: Vec<String>,
+    pub files: Vec<FileInfo>,
     pub selected_index: usize,
 }
 
@@ -27,12 +29,27 @@ impl FileListState {
         }
     }
 
-    pub fn selected(&self) -> Option<&String> {
+    pub fn selected(&self) -> Option<&FileInfo> {
         self.files.get(self.selected_index)
     }
 
-    pub fn set_files(&mut self, files: Vec<String>) {
+    pub fn set_files(&mut self, files: Vec<FileInfo>) {
+        // Preserve selection by filename
+        let selected_name = self.selected().map(|f| f.name.clone());
+
         self.files = files;
-        self.selected_index = 0;
+
+        // Try to restore previous selection
+        if let Some(name) = selected_name
+            && let Some(pos) = self.files.iter().position(|f| f.name == name)
+        {
+            self.selected_index = pos;
+            return;
+        }
+
+        // Fallback: Keep index within bounds
+        if self.selected_index >= self.files.len() && !self.files.is_empty() {
+            self.selected_index = self.files.len() - 1;
+        }
     }
 }

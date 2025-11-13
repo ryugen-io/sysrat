@@ -5,6 +5,7 @@ pub mod file_list;
 pub mod menu;
 pub mod pane;
 pub mod refresh;
+pub mod status_helper;
 
 pub use app::AppState;
 pub use container_list::ContainerListState;

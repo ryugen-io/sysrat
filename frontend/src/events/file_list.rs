@@ -1,5 +1,5 @@
 use crate::api;
-use crate::state::{AppState, Pane};
+use crate::state::{AppState, Pane, status_helper};
 use ratzilla::event::{KeyCode, KeyEvent};
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen_futures::spawn_local;
@@ -17,20 +17,22 @@ pub fn handle_keys(state: &mut AppState, state_rc: &Rc<RefCell<AppState>>, key_e
             state.file_list.previous();
         }
         KeyCode::Enter => {
-            if let Some(filename) = state.file_list.selected().cloned() {
+            if let Some(fileinfo) = state.file_list.selected().cloned() {
                 let state_clone = Rc::clone(state_rc);
                 spawn_local(async move {
-                    match api::fetch_file_content(&filename).await {
+                    match api::fetch_file_content(&fileinfo.name).await {
                         Ok(content) => {
                             let mut st = state_clone.borrow_mut();
-                            st.editor.load_content(filename.clone(), content);
+                            st.editor.load_content(fileinfo.name.clone(), content);
                             st.dirty = false;
                             st.focus = Pane::Editor;
-                            st.set_status(format!("Loaded: {}", filename));
+                            st.set_status(format!("Loaded: {}", fileinfo.name));
                         }
                         Err(e) => {
-                            let mut st = state_clone.borrow_mut();
-                            st.set_status(format!("Error loading: {:?}", e));
+                            status_helper::set_status_timed(
+                                &state_clone,
+                                format!("Error loading: {:?}", e),
+                            );
                         }
                     }
                 });

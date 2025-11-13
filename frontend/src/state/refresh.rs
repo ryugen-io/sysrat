@@ -1,4 +1,5 @@
-use super::{AppState, Pane};
+use super::{AppState, Pane, status_helper};
+use gloo_timers::callback::Interval;
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen_futures::spawn_local;
 
@@ -36,12 +37,14 @@ fn refresh_file_list(state_rc: &Rc<RefCell<AppState>>) {
                 crate::storage::generic::save("file-list", &files);
                 let mut st = state_clone.borrow_mut();
                 st.file_list.set_files(files);
-                st.set_status("Loaded file list");
+                // Don't overwrite status on success - let action messages show
             }
             Err(e) => {
                 crate::storage::generic::clear("file-list");
-                let mut st = state_clone.borrow_mut();
-                st.set_status(format!("Error loading files: {:?}", e));
+                status_helper::set_status_timed(
+                    &state_clone,
+                    format!("Error loading files: {:?}", e),
+                );
             }
         }
     });
@@ -55,13 +58,29 @@ fn refresh_container_list(state_rc: &Rc<RefCell<AppState>>) {
                 crate::storage::generic::save("container-list", &containers);
                 let mut st = state_clone.borrow_mut();
                 st.container_list.set_containers(containers);
-                st.set_status("Loaded container list");
+                // Don't overwrite status on success - let action messages show
             }
             Err(e) => {
                 crate::storage::generic::clear("container-list");
-                let mut st = state_clone.borrow_mut();
-                st.set_status(format!("Error loading containers: {:?}", e));
+                status_helper::set_status_timed(
+                    &state_clone,
+                    format!("Error loading containers: {:?}", e),
+                );
             }
         }
     });
+}
+
+/// Start background refresh timer for container list
+/// Refreshes every 10 seconds to keep container status up-to-date
+pub fn start_background_refresh(state_rc: &Rc<RefCell<AppState>>) {
+    let state_clone = Rc::clone(state_rc);
+
+    // Create interval that fires every 10 seconds
+    let interval = Interval::new(10_000, move || {
+        refresh_container_list(&state_clone);
+    });
+
+    // Prevent interval from being dropped (it needs to keep running)
+    interval.forget();
 }

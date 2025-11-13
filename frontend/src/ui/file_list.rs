@@ -39,7 +39,7 @@ pub fn render(f: &mut Frame, state: &AppState, area: Rect) {
             };
 
             ListItem::new(Line::from(vec![Span::styled(
-                format!("{}{}", prefix, file),
+                format!("{}{}", prefix, file.name),
                 style,
             )]))
         })

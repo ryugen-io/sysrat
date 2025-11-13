@@ -47,8 +47,10 @@ pub fn main() -> Result<(), JsValue> {
                             st.set_status("Restored session");
                         }
                         Err(e) => {
-                            let mut st = state_clone.borrow_mut();
-                            st.set_status(format!("Error loading files: {:?}", e));
+                            state::status_helper::set_status_timed(
+                                &state_clone,
+                                format!("Error loading files: {:?}", e),
+                            );
                         }
                     }
                 });
@@ -65,6 +67,9 @@ pub fn main() -> Result<(), JsValue> {
             }
         }
     }
+
+    // Start background refresh for container list (every 10 seconds)
+    state::refresh::start_background_refresh(&app_state);
 
     // Set up key event handler
     terminal.on_key_event({

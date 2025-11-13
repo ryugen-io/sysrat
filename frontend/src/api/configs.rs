@@ -1,8 +1,8 @@
-use super::types::{FileContentResponse, FileListResponse, WriteConfigRequest};
+use super::types::{FileContentResponse, FileInfo, FileListResponse, WriteConfigRequest};
 use gloo_net::http::Request;
 use wasm_bindgen::JsValue;
 
-pub async fn fetch_file_list() -> Result<Vec<String>, JsValue> {
+pub async fn fetch_file_list() -> Result<Vec<FileInfo>, JsValue> {
     let response = Request::get("/api/configs")
         .send()
         .await

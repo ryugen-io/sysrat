@@ -17,14 +17,3 @@ pub(super) fn validate_filename(filename: &str) -> Result<(), (StatusCode, Strin
 
     Ok(())
 }
-
-/// Builds the full path for a config file
-pub(super) fn build_config_path(filename: &str) -> String {
-    const CONFIG_DIR: &str = "/tmp/config-manager-configs";
-    format!("{}/{}", CONFIG_DIR, filename)
-}
-
-/// Returns the config directory path
-pub(super) fn config_dir() -> &'static str {
-    "/tmp/config-manager-configs"
-}
