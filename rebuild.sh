@@ -62,15 +62,19 @@ done
 
 # Logging functions
 log_info() {
-    echo -e "${GREEN}[INFO]${NC} $1"
+    echo -e "${GREEN}  ${NC}$1"
 }
 
 log_warn() {
-    echo -e "${YELLOW}[WARN]${NC} $1"
+    echo -e "${YELLOW}  ${NC}$1"
 }
 
 log_error() {
-    echo -e "${RED}[ERROR]${NC} $1" >&2
+    echo -e "${RED}  ${NC}$1" >&2
+}
+
+log_success() {
+    echo -e "${GREEN}  ${NC}$1"
 }
 
 # Cleanup function
@@ -198,8 +202,8 @@ build_backend() {
         }
     fi
 
-    log_info "Building backend (dev profile)..."
-    cargo build --bin config-manager-server || {
+    log_info "Building backend (dev profile with auditable)..."
+    cargo auditable build --bin config-manager-server || {
         log_error "Backend dev build failed"
         exit 1
     }
