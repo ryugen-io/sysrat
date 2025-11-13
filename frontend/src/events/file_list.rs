@@ -29,7 +29,7 @@ pub fn handle_keys(state: &mut AppState, state_rc: &Rc<RefCell<AppState>>, key_e
                             st.editor.load_content(fileinfo.name.clone(), content);
                             st.dirty = false;
                             st.focus = Pane::Editor;
-                            st.set_status(format!("Loaded: {}", fileinfo.name));
+                            st.set_status("[OK]".to_string());
                         }
                         Err(e) => {
                             status_helper::set_status_timed(
