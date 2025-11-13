@@ -1,5 +1,6 @@
 mod api;
 mod events;
+mod keybinds;
 mod state;
 mod storage;
 mod theme;

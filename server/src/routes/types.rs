@@ -32,3 +32,9 @@ pub struct ContainerInfo {
 pub struct ContainerListResponse {
     pub containers: Vec<ContainerInfo>,
 }
+
+#[derive(Serialize)]
+pub struct ContainerActionResponse {
+    pub success: bool,
+    pub message: String,
+}

@@ -1,5 +1,5 @@
 use super::{ContainerListState, EditorState, FileListState, MenuState, Pane, VimMode};
-use crate::storage;
+use crate::{keybinds::Keybinds, storage};
 
 pub struct AppState {
     pub focus: Pane,
@@ -10,6 +10,7 @@ pub struct AppState {
     pub editor: EditorState,
     pub dirty: bool,
     pub status_message: Option<String>,
+    pub keybinds: Keybinds,
 }
 
 impl AppState {
@@ -23,6 +24,7 @@ impl AppState {
             editor: EditorState::new(),
             dirty: false,
             status_message: None,
+            keybinds: Keybinds::load(),
         };
 
         // Try to restore from localStorage

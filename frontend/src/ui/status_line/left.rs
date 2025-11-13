@@ -40,11 +40,20 @@ pub fn render(f: &mut Frame, state: &AppState, area: Rect) {
     }
 
     let help_text = match (state.focus, state.vim_mode) {
-        (Pane::Menu, _) => " | j/k:navigate Enter:select",
-        (Pane::FileList, _) => " | j/k:navigate Enter:load ESC:menu Ctrl-→:editor",
-        (Pane::Editor, VimMode::Normal) => " | i:insert F2:save Ctrl-←:files",
-        (Pane::Editor, VimMode::Insert) => " | ESC:normal F2:save",
-        (Pane::ContainerList, _) => " | j/k:navigate ESC/Ctrl-←:menu",
+        (Pane::Menu, _) => format!(" | {}", state.keybinds.menu.help_text()),
+        (Pane::FileList, _) => {
+            format!(
+                " | {}",
+                state.keybinds.file_list.help_text(&state.keybinds.global)
+            )
+        }
+        (Pane::Editor, VimMode::Normal) => {
+            format!(" | {}", state.keybinds.global.editor_normal_help_text())
+        }
+        (Pane::Editor, VimMode::Insert) => {
+            format!(" | {}", state.keybinds.global.editor_insert_help_text())
+        }
+        (Pane::ContainerList, _) => format!(" | {}", state.keybinds.container_list.help_text()),
     };
     spans.push(Span::styled(help_text, StatusLineTheme::help_text_style()));
 

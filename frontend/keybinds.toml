@@ -1,0 +1,25 @@
+# Keybinds Configuration for Config Manager
+
+[menu]
+navigate_down = "j"
+navigate_up = "k"
+select = "Enter"
+
+[file_list]
+navigate_down = "j"
+navigate_up = "k"
+select = "Enter"
+back_to_menu = "Esc"
+go_to_editor = "Ctrl-Right"
+
+[container_list]
+navigate_down = "j"
+navigate_up = "k"
+start_container = "s"
+stop_container = "x"
+restart_container = "r"
+back_to_menu = "Esc"
+
+[global]
+save = "F2"
+back_to_files = "Ctrl-Left"

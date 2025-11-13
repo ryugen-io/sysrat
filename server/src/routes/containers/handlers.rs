@@ -1,10 +1,10 @@
-use super::types::{ContainerInfo, ContainerListResponse};
-use axum::{Json, http::StatusCode};
+use super::super::types::{ContainerActionResponse, ContainerInfo, ContainerListResponse};
+use super::actions::execute_container_action;
+use axum::{Json, extract::Path, http::StatusCode};
 use tokio::process::Command;
 
-// GET /api/containers - List all Docker containers
+/// GET /api/containers - List all Docker containers
 pub async fn list_containers() -> Result<Json<ContainerListResponse>, (StatusCode, String)> {
-    // Execute docker ps command
     let output = Command::new("docker")
         .args([
             "ps",
@@ -45,4 +45,25 @@ pub async fn list_containers() -> Result<Json<ContainerListResponse>, (StatusCod
     }
 
     Ok(Json(ContainerListResponse { containers }))
+}
+
+/// POST /api/containers/:id/start - Start a container
+pub async fn start_container(
+    Path(id): Path<String>,
+) -> Result<Json<ContainerActionResponse>, (StatusCode, String)> {
+    execute_container_action(&id, "start").await
+}
+
+/// POST /api/containers/:id/stop - Stop a container
+pub async fn stop_container(
+    Path(id): Path<String>,
+) -> Result<Json<ContainerActionResponse>, (StatusCode, String)> {
+    execute_container_action(&id, "stop").await
+}
+
+/// POST /api/containers/:id/restart - Restart a container
+pub async fn restart_container(
+    Path(id): Path<String>,
+) -> Result<Json<ContainerActionResponse>, (StatusCode, String)> {
+    execute_container_action(&id, "restart").await
 }

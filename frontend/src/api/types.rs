@@ -27,3 +27,9 @@ pub struct ContainerInfo {
 pub(super) struct ContainerListResponse {
     pub containers: Vec<ContainerInfo>,
 }
+
+#[derive(Deserialize)]
+pub(super) struct ContainerActionResponse {
+    pub success: bool,
+    pub message: String,
+}
