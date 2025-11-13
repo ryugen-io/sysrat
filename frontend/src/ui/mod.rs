@@ -3,13 +3,22 @@ mod file_list;
 mod menu;
 mod status_line;
 
-use crate::state::{AppState, Pane};
+use crate::{
+    state::{AppState, Pane},
+    theme::Theme,
+};
 use ratzilla::ratatui::{
     Frame,
     layout::{Constraint, Direction, Layout},
+    style::Style,
+    widgets::{Block, Widget},
 };
 
 pub fn render(f: &mut Frame, state: &AppState) {
+    // Set global background to MANTLE
+    let background = Block::default().style(Style::default().bg(Theme::MANTLE));
+    background.render(f.area(), f.buffer_mut());
+
     let chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
