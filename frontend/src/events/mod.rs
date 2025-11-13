@@ -25,6 +25,7 @@ pub fn handle_key_event(state: Rc<RefCell<AppState>>, key_event: KeyEvent) {
     // Ctrl+Left: Focus file list
     if key_event.ctrl && key_event.code == KeyCode::Left {
         state_mut.focus = Pane::FileList;
+        state_mut.save_to_storage();
         return;
     }
 
@@ -32,6 +33,7 @@ pub fn handle_key_event(state: Rc<RefCell<AppState>>, key_event: KeyEvent) {
     if key_event.ctrl && key_event.code == KeyCode::Right {
         state_mut.focus = Pane::Editor;
         state_mut.vim_mode = crate::state::VimMode::Normal;
+        state_mut.save_to_storage();
         return;
     }
 
@@ -40,4 +42,7 @@ pub fn handle_key_event(state: Rc<RefCell<AppState>>, key_event: KeyEvent) {
         Pane::FileList => file_list::handle_keys(&mut state_mut, &state, key_event),
         Pane::Editor => editor::handle_keys(&mut state_mut, key_event),
     }
+
+    // Save state after any key event
+    state_mut.save_to_storage();
 }

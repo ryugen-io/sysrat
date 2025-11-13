@@ -1,10 +1,30 @@
 use super::{EditorState, FileListState, MenuState};
+use crate::storage;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Pane {
     Menu,
     FileList,
     Editor,
+}
+
+impl Pane {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Pane::Menu => "Menu",
+            Pane::FileList => "FileList",
+            Pane::Editor => "Editor",
+        }
+    }
+
+    pub fn from_str(s: &str) -> Option<Self> {
+        match s {
+            "Menu" => Some(Pane::Menu),
+            "FileList" => Some(Pane::FileList),
+            "Editor" => Some(Pane::Editor),
+            _ => None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -25,7 +45,7 @@ pub struct AppState {
 
 impl AppState {
     pub fn new() -> Self {
-        Self {
+        let mut state = Self {
             focus: Pane::Menu,
             vim_mode: VimMode::Normal,
             menu: MenuState::new(),
@@ -33,7 +53,35 @@ impl AppState {
             editor: EditorState::new(),
             dirty: false,
             status_message: None,
+        };
+
+        // Try to restore from localStorage
+        if let Some(saved) = storage::load_state()
+            && let Some(pane) = Pane::from_str(&saved.pane)
+        {
+            state.focus = pane;
+
+            // If we were in the editor, restore the file
+            if pane == Pane::Editor
+                && let (Some(filename), Some(content)) = (saved.filename, saved.content)
+            {
+                state.editor.load_content(filename, content);
+                state.dirty = false;
+            }
         }
+
+        state
+    }
+
+    pub fn save_to_storage(&self) {
+        let filename = self.editor.current_file.as_deref();
+        let content = if self.editor.current_file.is_some() {
+            Some(self.editor.textarea.lines().join("\n"))
+        } else {
+            None
+        };
+
+        storage::save_state(self.focus.as_str(), filename, content.as_deref());
     }
 
     pub fn set_status(&mut self, message: impl Into<String>) {
