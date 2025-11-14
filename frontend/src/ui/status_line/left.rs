@@ -15,8 +15,8 @@ pub fn render(f: &mut Frame, state: &AppState, area: Rect) {
 
     let mut spans = vec![Span::styled(format!(" {} ", mode_text), mode_style)];
 
-    // Only show file info when not in Menu
-    if state.focus != Pane::Menu {
+    // Only show file info in Editor and FileList
+    if matches!(state.focus, Pane::Editor | Pane::FileList) {
         spans.push(Span::raw(" | "));
         if let Some(filename) = &state.editor.current_file {
             spans.push(Span::styled(filename, StatusLineTheme::filename_style()));
