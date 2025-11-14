@@ -1,5 +1,5 @@
 use super::{ContainerListState, EditorState, FileListState, MenuState, Pane, VimMode, refresh};
-use crate::{keybinds::Keybinds, storage};
+use crate::{api::ContainerDetails, keybinds::Keybinds, storage};
 
 pub struct AppState {
     pub focus: Pane,
@@ -7,6 +7,7 @@ pub struct AppState {
     pub menu: MenuState,
     pub file_list: FileListState,
     pub container_list: ContainerListState,
+    pub container_details: Option<ContainerDetails>,
     pub editor: EditorState,
     pub dirty: bool,
     pub status_message: Option<String>,
@@ -21,6 +22,7 @@ impl AppState {
             menu: MenuState::new(),
             file_list: FileListState::new(),
             container_list: ContainerListState::new(),
+            container_details: None,
             editor: EditorState::new(),
             dirty: false,
             status_message: None,

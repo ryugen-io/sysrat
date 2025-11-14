@@ -45,3 +45,39 @@ pub struct ContainerActionResponse {
     pub success: bool,
     pub message: String,
 }
+
+#[derive(Serialize, Clone)]
+pub struct PortMapping {
+    pub container_port: String,
+    pub host_port: String,
+    pub protocol: String,
+}
+
+#[derive(Serialize, Clone)]
+pub struct VolumeMount {
+    pub source: String,
+    pub destination: String,
+    pub mode: String,
+}
+
+#[derive(Serialize, Clone)]
+pub struct ContainerDetails {
+    pub id: String,
+    pub name: String,
+    pub image: String,
+    pub state: String,
+    pub status: String,
+    pub created: String,
+    pub started: String,
+    pub ports: Vec<PortMapping>,
+    pub volumes: Vec<VolumeMount>,
+    pub networks: Vec<String>,
+    pub environment: Vec<String>,
+    pub restart_policy: String,
+    pub health: Option<String>,
+}
+
+#[derive(Serialize)]
+pub struct ContainerDetailsResponse {
+    pub details: ContainerDetails,
+}

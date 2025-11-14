@@ -1,3 +1,4 @@
+mod container_details;
 mod container_list;
 mod editor;
 mod file_list;
@@ -31,7 +32,7 @@ pub fn render(f: &mut Frame, state: &AppState) {
     // Main content depends on current pane
     match state.focus {
         Pane::Menu => menu::render(f, state, chunks[0]),
-        Pane::ContainerList => container_list::render(f, state, chunks[0]),
+        Pane::ContainerList => render_container_view(f, state, chunks[0]),
         _ => render_main_content(f, state, chunks[0]),
     }
 
@@ -50,4 +51,17 @@ fn render_main_content(f: &mut Frame, state: &AppState, area: ratzilla::ratatui:
 
     file_list::render(f, state, chunks[0]);
     editor::render(f, state, chunks[1]);
+}
+
+fn render_container_view(f: &mut Frame, state: &AppState, area: ratzilla::ratatui::layout::Rect) {
+    let chunks = Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints([
+            Constraint::Percentage(40), // Container list
+            Constraint::Percentage(60), // Container details
+        ])
+        .split(area);
+
+    container_list::render(f, state, chunks[0]);
+    container_details::render(f, state, chunks[1]);
 }

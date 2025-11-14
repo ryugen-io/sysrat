@@ -33,6 +33,10 @@ async fn main() {
         .route("/api/configs/*filename", get(routes::read_config))
         .route("/api/configs/*filename", post(routes::write_config))
         .route("/api/containers", get(routes::list_containers))
+        .route(
+            "/api/containers/:id/details",
+            get(routes::get_container_details),
+        )
         .route("/api/containers/:id/start", post(routes::start_container))
         .route("/api/containers/:id/stop", post(routes::stop_container))
         .route(
