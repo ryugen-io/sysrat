@@ -106,17 +106,28 @@ class ShellLinter:
         """Check if functions use local variables"""
         in_function = False
         has_local = False
+        has_variable_assignment = False
+        function_lines = 0
 
         for line in self.lines:
             if re.match(r'^\s*(function\s+\w+|[a-z_][a-z0-9_]*\(\s*\)\s*{)', line):
                 in_function = True
                 has_local = False
-            elif in_function and re.search(r'\blocal\b', line):
-                has_local = True
+                has_variable_assignment = False
+                function_lines = 0
             elif in_function and line.strip() == '}':
-                if not has_local:
-                    self.warnings.append("Function without 'local' variables")
+                # Only warn if function assigns variables but doesn't use local
+                # Skip simple one-liner functions (like logging functions)
+                if has_variable_assignment and not has_local and function_lines > 2:
+                    self.warnings.append("Function assigns variables without 'local'")
                 in_function = False
+            elif in_function:
+                function_lines += 1
+                if re.search(r'\blocal\b', line):
+                    has_local = True
+                # Check for variable assignments (but not $var or readonly)
+                if re.search(r'^\s*[a-z_][a-z0-9_]*=', line) and not re.search(r'^\s*readonly\b', line):
+                    has_variable_assignment = True
 
     def lint(self) -> Tuple[int, int]:
         """Run all checks"""

@@ -71,24 +71,18 @@ for script in *.sh; do
         issues=$((issues + 1))
     fi
 
-    # 4. Check for unquoted variables (basic check)
-    if grep -n '\$[A-Za-z_][A-Za-z0-9_]*[^}]' "$script" | grep -v '"' | grep -v "'" | grep -v '#' >/dev/null; then
-        # This is a very basic check and may have false positives
-        log_warn "Potentially unquoted variables found (review manually)"
-    fi
+    # 4. Check for unquoted variables (disabled - too many false positives)
+    # This produces warnings for safe cases like echo -e "${COLOR}text${NC}"
+    # Manual review is better than automated checking for this
 
     # 5. Check executable permission
     if [ ! -x "$script" ]; then
         log_warn "Script is not executable (chmod +x $script)"
     fi
 
-    # 6. Check for 'local' in functions
-    if grep -q "^[[:space:]]*function " "$script" || grep -q "^[[:space:]]*[a-z_][a-z0-9_]*() {" "$script"; then
-        # Has functions, good practice to use local
-        if ! grep -q "local " "$script"; then
-            log_warn "Functions found but no 'local' variables (consider using local)"
-        fi
-    fi
+    # 6. Check for 'local' in functions (skip - too many false positives)
+    # Simple logging functions don't need local variables
+    # This check is better handled by the Python linter (shellcheck_test.py)
 
     if [ $issues -eq 0 ]; then
         log_success "Passed basic linting"
