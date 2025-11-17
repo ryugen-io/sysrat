@@ -161,6 +161,15 @@ def generate_readme(files: dict, versions: dict, git_info: dict) -> str:
     CHART = '📊'
     INFO = 'ℹ️'
 
+    # Feature emojis
+    SPARKLES = '✨'
+    TARGET = '🎯'
+    PALETTE = '🎨'
+    PACKAGE = '📦'
+    CONTROLS = '🎛️'
+    TAG = '🏷️'
+    CHECK = '✅'
+
     readme = "# sysrat\n\n"
     readme += "**sysrat** is a full-stack web-based configuration management system written in Rust.\n\n"
     readme += f"- **Backend**: {SERVER} Rust + Axum (async web framework)\n"
@@ -184,14 +193,14 @@ def generate_readme(files: dict, versions: dict, git_info: dict) -> str:
     readme += f"- **Build**: {HAMMER} Trunk (WASM bundler), Cargo (Rust toolchain)\n\n"
 
     # Features section
-    readme += "## ✨ Features\n\n"
+    readme += f"## {SPARKLES} Features\n\n"
     readme += "### Status Line System\n\n"
-    readme += "- 🎯 **Modular component system** with 13 component types\n"
-    readme += "- 🎨 **TOML-configurable** (built-in + XDG user override)\n"
-    readme += "- 📦 **Split components** (state.rs, build.rs, text.rs) - all under 90 LOC\n"
-    readme += "- 🎛️ **Per-pane configuration** (Menu shows only build info in 1 line)\n"
-    readme += "- 🏷️ **Themed build output** with `[statusline]` tag\n"
-    readme += "- ✅ **All checks passed** (clippy -D warnings, fmt, test, audit)\n\n"
+    readme += f"- {TARGET} **Modular component system** with 13 component types\n"
+    readme += f"- {PALETTE} **TOML-configurable** (built-in + XDG user override)\n"
+    readme += f"- {PACKAGE} **Split components** (state.rs, build.rs, text.rs) - all under 90 LOC\n"
+    readme += f"- {CONTROLS} **Per-pane configuration** (Menu shows only build info in 1 line)\n"
+    readme += f"- {TAG} **Themed build output** with `[statusline]` tag\n"
+    readme += f"- {CHECK} **All checks passed** (clippy -D warnings, fmt, test, audit)\n\n"
 
     # Management Scripts
     if files['management_scripts']:
