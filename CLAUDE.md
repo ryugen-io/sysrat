@@ -3,7 +3,7 @@
 This document provides comprehensive guidance for AI assistants working on the sysrat codebase. It covers architecture, development workflows, conventions, and best practices.
 
 **Last Updated:** 2025-11-17
-**Version:** 0.3.0
+**Version:** 0.4.0
 
 ---
 
@@ -258,6 +258,9 @@ Install required tools:
 # Rust toolchain (1.85+)
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
+# WASM target for Rust
+rustup target add wasm32-unknown-unknown
+
 # WASM bundler
 cargo install trunk
 
@@ -271,7 +274,11 @@ cargo install just
 ### Quick Start
 
 ```bash
-# Full rebuild and start server
+# 1. Create environment configuration (REQUIRED for building)
+cp sys/env/.env.example sys/env/.env
+# Edit sys/env/.env if needed (default values work for most cases)
+
+# 2. Full rebuild and start server
 python rebuild.py
 # or
 ./rebuild.py
@@ -281,6 +288,8 @@ just rebuild
 ```
 
 Access the application at: `http://localhost:3000`
+
+**Note**: The `.env` file is **required** for building because `frontend/build.rs` uses it to detect user custom themes and keybinds.
 
 ### Build Options
 
@@ -377,12 +386,24 @@ trunk build --release
 
 **Build Process**:
 1. `build.rs` runs at compile time:
-   - Extracts dependency versions
-   - Reads theme files from `themes/` directory and injects colors as env vars
+   - Loads `sys/env/.env` (or `SYSRAT_ENV_FILE`) for XDG paths
+   - Extracts dependency versions from `Cargo.toml`
+   - Scans and embeds theme files:
+     - Built-in themes from `frontend/themes/` (mocha, frappe, latte, macchiato)
+     - User custom themes from `$USER_THEME_DIR` (~/.config/sysrat/themes/)
+   - Loads keybinds:
+     - User custom from `$USER_KEYBINDS_FILE` (~/.config/sysrat/keybinds.toml)
+     - Falls back to `frontend/keybinds.toml` if user file doesn't exist
+   - Injects colors, fonts, and keybinds as compile-time environment variables
    - Sets build date and git hash
-2. Trunk compiles Rust to WASM
+2. Trunk compiles Rust to WASM with embedded configurations
 3. Outputs bundled assets to `dist/`
 4. Backend serves `dist/` at root path `/`
+
+**XDG-Extensible Components** (detected at build time):
+- ✅ Themes: `~/.config/sysrat/themes/*.toml`
+- ✅ Keybinds: `~/.config/sysrat/keybinds.toml`
+- ✅ Main Config: `~/.config/sysrat/sysrat.toml` (loaded at runtime by server)
 
 ### Additional Justfile Commands
 
@@ -551,10 +572,27 @@ if __name__ == '__main__':
 
 #### Environment Configuration
 
-- **Development Config**: `sys/env/.env.dev` (for development tools like lines.py, pylint.py)
-- **Production Config**: `sys/env/.env` (for deployment scripts, not tracked in git)
-- **Template**: `sys/env/.env.example` (comprehensive configuration template)
-- **Variables**: SERVER_HOST, SERVER_PORT, RUST_TOOLCHAIN, THEME_DIR, XDG_*, etc.
+The project uses environment files for build-time and runtime configuration. These are **CRITICAL** for building:
+
+| File | Purpose | Used By | Tracked in Git? |
+|------|---------|---------|-----------------|
+| **`sys/env/.env.example`** | Comprehensive template with all available options | Documentation | ✅ Yes |
+| **`sys/env/.env.dev`** | Development tools configuration (lines.py, pylint.py, etc.) | Python utility scripts | ❌ No |
+| **`sys/env/.env`** | Production/deployment configuration | Build scripts, server startup | ❌ No |
+
+**IMPORTANT for Building**:
+- `frontend/build.rs` loads from `sys/env/.env` (or `SYSRAT_ENV_FILE` env var)
+- Used to configure `USER_THEME_DIR`, `USER_KEYBINDS_FILE`, and other XDG paths
+- Required for detecting user custom themes and keybinds at compile time
+- Create from template: `cp sys/env/.env.example sys/env/.env`
+
+**Key Environment Variables**:
+- `SERVER_HOST`, `SERVER_PORT` - Server configuration
+- `RUST_TOOLCHAIN` - Rust version to use
+- `USER_THEME_DIR` - Path to user custom themes (~/.config/sysrat/themes)
+- `USER_KEYBINDS_FILE` - Path to user custom keybinds (~/.config/sysrat/keybinds.toml)
+- `THEME_DIR`, `THEME_PYTHON`, `THEME_BASH` - Theme system paths
+- `XDG_CONFIG_HOME`, `XDG_STATE_HOME` - XDG directory overrides
 
 #### Reference Scripts
 
@@ -724,22 +762,38 @@ The server searches for `sysrat.toml` in this order:
 2. `~/.config/sysrat/sysrat.toml` (fallback if XDG_CONFIG_HOME not set)
 3. `./sysrat.toml` (current directory, for development)
 
-#### User Customization
+#### User Customization (XDG-Compliant)
 
-Users can override defaults by placing files in XDG directories:
+Users can override system defaults by placing files in XDG directories. The build system and runtime will automatically detect and use these user-provided configurations:
 
+**Custom Themes** (User-Extensible):
 ```bash
-# Custom theme
-~/.config/sysrat/themes/custom.toml
+~/.config/sysrat/themes/mytheme.toml  # Add custom frontend themes
+```
+- Detected by `frontend/build.rs` at compile time
+- Automatically embedded alongside built-in themes (Mocha, Frappe, Latte, Macchiato)
+- Use via `theme = "mytheme"` in sysrat.toml file entries
 
-# Custom keybinds
-~/.config/sysrat/keybinds.toml
+**Custom Keybinds** (User-Extensible):
+```bash
+~/.config/sysrat/keybinds.toml  # Override default keybindings
+```
+- Loaded by `frontend/build.rs` at compile time
+- Falls back to `frontend/keybinds.toml` if user file doesn't exist
+- Allows per-user keybind customization without modifying repository
 
-# Custom configuration
-~/.config/sysrat/sysrat.toml
+**Custom Main Configuration** (User-Extensible):
+```bash
+~/.config/sysrat/sysrat.toml  # User's main configuration
+```
+- Loaded by server at runtime (first in search order)
+- Overrides repository `./sysrat.toml`
+- Allows managing different config files per user
 
-# Application logs (automatically created)
-~/.local/state/sysrat/sysrat.log
+**Application State** (Auto-Created):
+```bash
+~/.local/state/sysrat/sysrat.log  # Application logs
+~/.local/state/sysrat/history     # Command history (if implemented)
 ```
 
 #### Utility Script
@@ -886,7 +940,24 @@ let main_chunks = Layout::default()
    just build-frontend
    ```
 
-### Changing the Color Theme
+### Theme Systems
+
+The project has **TWO DISTINCT THEME SYSTEMS**:
+
+#### System 1: Python Build Script Theming (`sys/theme/`)
+
+**Purpose**: Provides colored console output for Python build and utility scripts.
+
+- **`sys/theme/theme.py`**: Python module with Catppuccin Mocha colors as ANSI terminal codes
+  - Hardcoded color classes (RED, GREEN, YELLOW, BLUE, MAUVE, etc.)
+  - Nerd Font icon constants (CHECK, CROSS, WARN, INFO, etc.)
+  - Helper functions (log_success, log_error, log_warn, log_info)
+- **`sys/theme/theme.toml`**: Theme configuration reference (colors + semantic mappings, **no font section**)
+- **Used by**: All Python scripts in `sys/rust/` and `sys/utils/`
+
+#### System 2: Frontend UI Theming (`frontend/themes/`)
+
+**Purpose**: Provides theming for the Rust WASM TUI interface with customizable fonts and per-file theme selection.
 
 The application uses a three-layer theme system with **multiple Catppuccin theme variants**:
 
@@ -894,9 +965,9 @@ The application uses a three-layer theme system with **multiple Catppuccin theme
 2. **Semantic Colors** - Meaningful mappings (ACCENT, SUCCESS, ERROR, etc.)
 3. **Component Themes** - UI-specific style builders that follow standardized patterns
 
-#### Available Theme Variants
+#### Available Frontend Theme Variants
 
-The project includes four Catppuccin theme variants:
+The project includes four **built-in Catppuccin theme variants** for the Frontend UI:
 
 | Theme | File | Description |
 |-------|------|-------------|
@@ -905,9 +976,25 @@ The project includes four Catppuccin theme variants:
 | **Latte** | `frontend/themes/latte.toml` | Light theme - Perfect for daylight use |
 | **Macchiato** | `frontend/themes/macchiato.toml` | Dark theme (cool) - Cooler color temperature |
 
-#### Modifying Theme Colors
+**User Custom Themes**: Users can add their own themes in `~/.config/sysrat/themes/` (XDG-compliant location).
 
-Edit any theme file (e.g., `frontend/themes/mocha.toml`):
+#### Per-File Theme Selection
+
+Individual configuration files can specify which theme to use in `sysrat.toml`:
+
+```toml
+[[files]]
+path = "/etc/nginx/nginx.conf"
+name = "nginx.conf"
+description = "Nginx main configuration"
+theme = "latte"  # Use light theme for this specific file
+```
+
+When a file is opened, the frontend will use the specified theme. If no theme is specified, the default theme (Mocha) is used.
+
+#### Modifying Frontend Theme Colors and Fonts
+
+Edit any frontend theme file (e.g., `frontend/themes/mocha.toml`):
 
 ```toml
 [colors]
@@ -926,19 +1013,42 @@ normal_mode = "sapphire"
 insert_mode = "mauve"
 
 [font]
-# Font configuration (used by frontend HTML)
-family = "Fira Code"
-fallback = "monospace"
-size = 16
-weight = 400
+# Font configuration (ONLY in frontend themes, not in sys/theme/theme.toml)
+family = "Fira Code"          # Font family name
+fallback = "monospace"         # Fallback font if primary unavailable
+size = 16                      # Font size in pixels
+weight = 400                   # Font weight (400 = normal, 700 = bold)
 cdn_url = "https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/fira_code.min.css"
 ```
 
-Theme colors are injected at compile time via `frontend/build.rs`.
+**Key Differences from Python Script Theme**:
+- Frontend themes include a `[font]` section for customizable fonts
+- Python script theme (`sys/theme/theme.toml`) has NO `[font]` section
+- Frontend themes support per-file selection and user custom themes
+- Python script theme is hardcoded in `theme.py` for terminal ANSI output
 
-#### Theme Design Pattern
+Theme colors and fonts are injected at compile time via `frontend/build.rs`.
 
-All component themes follow a standardized pattern defined in `frontend/src/theme/mod.rs`:
+#### Creating Custom Frontend Themes
+
+Users can create custom themes by placing `.toml` files in `~/.config/sysrat/themes/`:
+
+```bash
+# Create custom theme directory
+mkdir -p ~/.config/sysrat/themes
+
+# Copy existing theme as template
+cp frontend/themes/mocha.toml ~/.config/sysrat/themes/mytheme.toml
+
+# Edit the custom theme
+vim ~/.config/sysrat/themes/mytheme.toml
+```
+
+The build process will automatically detect and embed custom themes from `USER_THEME_DIR` (configured in `sys/env/.env`).
+
+#### Frontend Theme Design Pattern
+
+All frontend component themes follow a standardized pattern defined in `frontend/src/theme/mod.rs`:
 
 **Standard Methods** (every focusable widget should implement):
 - `border_focused()` - Border style when focused
@@ -960,19 +1070,32 @@ All component themes follow a standardized pattern defined in `frontend/src/them
 - `Theme::standard_background()` - Uses MANTLE background
 - `Theme::standard_highlight_bg()` - Uses SURFACE1 background
 
-#### Per-File Theme Support
+#### Python Script Theme System Usage
 
-Configuration files can specify custom theme variants in `sysrat.toml`:
+The Python script theme is used automatically by all build and utility scripts. Example usage:
 
-```toml
-[[files]]
-path = "/etc/nginx/nginx.conf"
-name = "nginx.conf"
-description = "Nginx main configuration"
-theme = "mocha"  # Optional: Custom theme variant
+```python
+#!/usr/bin/env python3
+import sys
+from pathlib import Path
+
+# Add sys/theme to path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / 'sys' / 'theme'))
+
+# Import theme
+from theme import Colors, Icons, log_success, log_error, log_warn, log_info
+
+# Use in scripts
+log_success("Build completed successfully")
+log_error("Failed to compile")
+log_warn("Deprecated feature detected")
+log_info("Starting process...")
+
+# Or use colors and icons directly
+print(f"{Colors.MAUVE}{Icons.ROCKET}  {Colors.NC}Launching server...")
 ```
 
-The `theme` field is passed from backend to frontend via the API and can be used to switch color schemes when editing specific files.
+**Note**: The Python script theme uses **hardcoded** Catppuccin Mocha colors in `theme.py`. To change these colors, you must edit the ANSI color codes directly in the Python module.
 
 #### Example: Creating a New Component Theme
 
@@ -1354,6 +1477,7 @@ Examples:
 
 | Version | Date | Changes |
 |---------|------|---------|
+| 0.4.0 | 2025-11-17 | **MAJOR CORRECTIONS**: Properly documented TWO DISTINCT theme systems (Python script theme in sys/theme/ vs Frontend UI theme in frontend/themes/), Clarified font configuration is ONLY in frontend themes, Added comprehensive XDG user extensibility documentation (themes, keybinds, main config), Documented .env file as CRITICAL for building (required by frontend/build.rs), Added build process details for theme/keybind detection, Updated Quick Start with required .env setup, Added per-file theme selection documentation, Added user custom theme creation guide |
 | 0.3.0 | 2025-11-17 | Added: Multiple theme variants (Mocha, Frappe, Latte, Macchiato), Font configuration system, XDG Base Directory compliance, New utility scripts (lines.py, pycompile.py, pyclean.py, fix_nerdfonts.py, remove_emojis.py, venv.py, xdg_paths.py), Comprehensive justfile commands (rust-checks, python-checks, all-checks, pre-commit), Environment config split (.env.dev for development) |
 | 0.2.0 | 2025-11-17 | Updated development workflows and Python script conventions |
 | 0.1.0 | 2025-11-15 | Initial CLAUDE.md creation |
