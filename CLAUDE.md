@@ -213,6 +213,28 @@ Both share the `Cargo.lock` file but have separate `Cargo.toml` manifests.
 
 ## Development Workflows
 
+### IMPORTANT: Always Use Python Scripts
+
+**CRITICAL**: This project uses Python scripts for ALL build, formatting, linting, and server management tasks. These scripts provide:
+- Consistent theming (Catppuccin Mocha + Nerd Font icons)
+- Centralized configuration from `.sys/env/.env`
+- Better error handling and user feedback
+- Unified workflow across all operations
+
+**DO NOT** use raw `cargo`, `trunk`, or `rustfmt` commands directly. **ALWAYS** use:
+
+| Task | Use This | NOT This |
+|------|----------|----------|
+| Build project | `./rebuild.py` or `just rebuild` | ❌ `cargo build`, `trunk build` |
+| Format code | `./.sys/rust/rustfmt.py` or `just fmt` | ❌ `cargo fmt` |
+| Run linter | `./.sys/rust/clippy.py` or `just clippy` | ❌ `cargo clippy` |
+| Run tests | `./.sys/rust/test_rust.py` or `just test` | ❌ `cargo test` |
+| Clean artifacts | `./.sys/rust/clean.py` or `just clean` | ❌ `cargo clean` |
+| Start server | `./start.py` or `just start` | ❌ `./target/release/config-manager-server` |
+| Stop server | `./stop.py` or `just stop` | ❌ `pkill config-manager-server` |
+
+**Exception**: Direct `cargo clippy -- -D warnings` is allowed for CI/final verification, but prefer the Python script for development.
+
 ### Prerequisites
 
 Install required tools:
