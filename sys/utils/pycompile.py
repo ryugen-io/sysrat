@@ -11,7 +11,7 @@ import py_compile
 
 # Add sys/theme to path for central theming
 SCRIPT_DIR = Path(__file__).resolve().parent
-REPO_ROOT = SCRIPT_DIR.parent
+REPO_ROOT = SCRIPT_DIR.parent.parent
 sys.path.insert(0, str(REPO_ROOT / 'sys' / 'theme'))
 
 from theme import (  # noqa: E402
