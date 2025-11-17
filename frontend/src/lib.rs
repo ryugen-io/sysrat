@@ -12,7 +12,46 @@ use state::{AppState, Pane};
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures::spawn_local;
-use web_sys::window;
+use web_sys::{Document, window};
+
+/// Inject font configuration into the document
+fn inject_font(doc: &Document, font_config: &theme::FontConfig) -> Result<(), JsValue> {
+    let head = doc
+        .head()
+        .ok_or_else(|| JsValue::from_str("No head element found"))?;
+
+    // Inject CDN link if provided
+    if let Some(cdn_url) = &font_config.cdn_url {
+        // Check if font link already exists (avoid duplicates)
+        if doc.query_selector("#theme-font-link")?.is_none() {
+            let link = doc.create_element("link")?;
+            link.set_attribute("id", "theme-font-link")?;
+            link.set_attribute("rel", "stylesheet")?;
+            link.set_attribute("href", cdn_url)?;
+            head.append_child(&link)?;
+        }
+    }
+
+    // Inject or update font style
+    let style_id = "theme-font-style";
+    let font_style = format!(
+        "pre {{ font-family: '{}', {}; font-size: {}px; font-weight: {}; margin: 0; }}",
+        font_config.family, font_config.fallback, font_config.size, font_config.weight
+    );
+
+    if let Some(existing_style) = doc.get_element_by_id(style_id) {
+        // Update existing style
+        existing_style.set_inner_html(&font_style);
+    } else {
+        // Create new style element
+        let style = doc.create_element("style")?;
+        style.set_id(style_id);
+        style.set_inner_html(&font_style);
+        head.append_child(&style)?;
+    }
+
+    Ok(())
+}
 
 #[wasm_bindgen(start)]
 pub fn main() -> Result<(), JsValue> {
@@ -22,16 +61,27 @@ pub fn main() -> Result<(), JsValue> {
     // Initialize app state
     let app_state = Rc::new(RefCell::new(AppState::new()));
 
-    // Set body background color from theme
+    // Set body background color and inject font from theme
     if let Some(win) = window()
         && let Some(doc) = win.document()
         && let Some(body) = doc.body()
     {
         let theme = &app_state.borrow().current_theme;
+
+        // Set background color
         let mantle = theme.mantle();
         if let ratzilla::ratatui::style::Color::Rgb(r, g, b) = mantle {
             let bg_color = format!("rgb({}, {}, {})", r, g, b);
             let _ = body.set_attribute("style", &format!("background-color: {}", bg_color));
+        }
+
+        // Inject font configuration
+        let font_config = &theme.font;
+        if let Err(e) = inject_font(&doc, font_config) {
+            web_sys::console::error_1(&JsValue::from_str(&format!(
+                "Failed to inject font: {:?}",
+                e
+            )));
         }
     }
 

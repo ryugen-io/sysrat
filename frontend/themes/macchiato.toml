@@ -26,3 +26,11 @@ error = "red"
 normal_mode = "sapphire"
 insert_mode = "mauve"
 dim = "subtext0"
+
+[font]
+# Font configuration
+family = "Fira Code"
+fallback = "monospace"
+size = 16
+weight = 400
+cdn_url = "https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/fira_code.min.css"
