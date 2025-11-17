@@ -18,27 +18,27 @@ rebuild-no-server:
 
 # Format all code
 fmt:
-    ./sys/rust/rustfmt.py
+    python3 sys/rust/rustfmt.py --recursive
 
 # Run clippy on all targets
 clippy:
-    ./sys/rust/clippy.py
+    python3 sys/rust/clippy.py --recursive
 
 # Run cargo check
 check:
-    ./sys/rust/check.py
+    python3 sys/rust/check.py --recursive
 
 # Run tests
 test:
-    ./sys/rust/test_rust.py
+    python3 sys/rust/test_rust.py --recursive
 
 # Run security audit
 audit:
-    ./sys/rust/audit.py
+    python3 sys/rust/audit.py --recursive
 
 # Clean build artifacts
 clean:
-    ./sys/rust/clean.py
+    python3 sys/rust/clean.py --recursive
 
 # Start server (background process)
 start:
@@ -56,6 +56,56 @@ status:
 logs:
     tail -f server.log
 
-# Count lines of code
-loc:
-    fish -c "locode rs"
+# Count lines of code (entire repo, excludes build artifacts)
+lines:
+    python3 sys/utils/lines.py
+
+# Alias for lines
+loc: lines
+
+# Python linting
+pylint:
+    python3 sys/utils/pylint.py --recursive
+
+# Python syntax check (compile all .py files)
+pycompile:
+    python3 sys/utils/pycompile.py --recursive
+
+# Clean Python cache files
+pyclean:
+    python3 sys/utils/pyclean.py --recursive
+
+# Fix Nerd Font icons in files
+fix-nerdfonts:
+    python3 sys/utils/fix_nerdfonts.py
+
+# Remove emojis from files
+remove-emojis:
+    python3 sys/utils/remove_emojis.py
+
+# Create/manage Python virtual environment
+venv:
+    python3 sys/utils/venv.py
+
+# Show XDG paths
+xdg-paths:
+    python3 sys/utils/xdg_paths.py
+
+# Run all Rust checks (fmt, clippy, check, test)
+rust-checks:
+    python3 sys/rust/rustfmt.py --recursive
+    python3 sys/rust/clippy.py --recursive
+    python3 sys/rust/check.py --recursive
+    python3 sys/rust/test_rust.py --recursive
+
+# Run all Python checks (pylint, pycompile)
+python-checks:
+    python3 sys/utils/pylint.py --recursive
+    python3 sys/utils/pycompile.py --recursive
+
+# Run all checks (Rust + Python)
+all-checks: rust-checks python-checks
+
+# Pre-commit checks (all linters + tests)
+pre-commit: all-checks
+    python3 sys/rust/audit.py --recursive
