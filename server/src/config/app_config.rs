@@ -75,21 +75,21 @@ impl AppConfig {
     /// Get the config file path (XDG-compliant)
     ///
     /// Search order:
-    /// 1. CONFIG_MANAGER_CONFIG env var
-    /// 2. XDG_CONFIG_HOME/config-manager/config-manager.toml
-    /// 3. ~/.config/config-manager/config-manager.toml
-    /// 4. ./config-manager.toml (fallback)
+    /// 1. SYSRAT_CONFIG env var
+    /// 2. XDG_CONFIG_HOME/sysrat/sysrat.toml
+    /// 3. ~/.config/sysrat/sysrat.toml
+    /// 4. ./sysrat.toml (fallback)
     fn config_path() -> String {
         use std::path::Path;
 
         // 1. Explicit override via env var
-        if let Ok(path) = std::env::var("CONFIG_MANAGER_CONFIG") {
+        if let Ok(path) = std::env::var("SYSRAT_CONFIG") {
             return path;
         }
 
         // 2. XDG_CONFIG_HOME (if set)
         if let Ok(xdg_config) = std::env::var("XDG_CONFIG_HOME") {
-            let path = format!("{}/config-manager/config-manager.toml", xdg_config);
+            let path = format!("{}/sysrat/sysrat.toml", xdg_config);
             if Path::new(&path).exists() {
                 return path;
             }
@@ -97,14 +97,14 @@ impl AppConfig {
 
         // 3. ~/.config/ (XDG default)
         if let Ok(home) = std::env::var("HOME") {
-            let path = format!("{}/.config/config-manager/config-manager.toml", home);
+            let path = format!("{}/.config/sysrat/sysrat.toml", home);
             if Path::new(&path).exists() {
                 return path;
             }
         }
 
         // 4. Fallback: current directory
-        "config-manager.toml".to_string()
+        "sysrat.toml".to_string()
     }
 }
 

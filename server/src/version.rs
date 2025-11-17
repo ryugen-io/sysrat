@@ -2,5 +2,5 @@
 pub const SERVER_VERSION: &str = env!("CARGO_PKG_VERSION");
 
 pub fn version_string() -> String {
-    format!("config-manager-server v{}", SERVER_VERSION)
+    format!("sysrat v{}", SERVER_VERSION)
 }

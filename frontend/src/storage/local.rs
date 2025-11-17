@@ -1,7 +1,7 @@
 use super::types::SavedState;
 use web_sys::window;
 
-const STORAGE_KEY: &str = "config-manager-state";
+const STORAGE_KEY: &str = "sysrat-state";
 
 pub fn save_state(pane: &str, filename: Option<&str>, content: Option<&str>) {
     if let Some(storage) = get_local_storage() {
@@ -93,7 +93,7 @@ fn deserialize_option_string(value: &str) -> Option<String> {
 }
 
 // Theme preference storage
-const THEME_KEY: &str = "config-manager-theme";
+const THEME_KEY: &str = "sysrat-theme";
 
 pub fn save_theme_preference(theme_name: &str) {
     if let Some(storage) = get_local_storage() {

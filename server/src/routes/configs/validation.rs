@@ -2,7 +2,7 @@ use crate::config::SharedConfig;
 use axum::http::StatusCode;
 
 /// Validates a filename for security
-/// Extension whitelist is loaded from config-manager.toml
+/// Extension whitelist is loaded from sysrat.toml
 pub(super) fn validate_filename(
     filename: &str,
     config: &SharedConfig,

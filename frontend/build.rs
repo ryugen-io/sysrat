@@ -5,7 +5,7 @@ use build_helpers::{date, hash, keybinds, theme, version};
 fn main() {
     // Load environment from sys/env/.env
     let env_file =
-        std::env::var("CONFIG_MANAGER_ENV_FILE").unwrap_or_else(|_| "../sys/env/.env".to_string());
+        std::env::var("SYSRAT_ENV_FILE").unwrap_or_else(|_| "../sys/env/.env".to_string());
     if let Err(e) = dotenvy::from_filename(&env_file) {
         eprintln!("Warning: Could not load {}: {}", env_file, e);
     }

@@ -1,4 +1,4 @@
-# Config Manager - Meta Configuration
+# SysRat - Meta Configuration
 # Define which system files to manage
 
 # Global settings
@@ -13,19 +13,19 @@ allowed_extensions = ["toml"]
 # - readonly: Optional, if true the file cannot be edited
 # - theme: Optional, specify a custom theme variant for this file (e.g., "mocha", "latte")
 
-# Config-Manager -> config-manager.toml
+# SysRat -> sysrat.toml
 [[files]]
-path = "/data/code/devel/git.repos/configmanager-rs/config-manager.toml"
-name = "config-manager.toml"
-description = "Config Manager Main config File"
+path = "/data/code/devel/git.repos/sysrat-rs/sysrat.toml"
+name = "sysrat.toml"
+description = "SysRat Main config File"
 
 # Directory scanning example
 # Scans a directory recursively and includes files matching specific types
 [[directories]]
-path = "/data/code/devel/git.repos/configmanager-rs"
-name = "config-manager"
+path = "/data/code/devel/git.repos/sysrat-rs"
+name = "sysrat"
 depth = 3
 types = ["toml"]
-description = "Config Manager Main Dir"
+description = "SysRat Main Dir"
 
 # You can add more files and directories here!

@@ -14,8 +14,7 @@ async fn main() {
     println!("{}", version::version_string());
 
     // Load environment variables from sys/env/.env if it exists
-    let env_file =
-        std::env::var("CONFIG_MANAGER_ENV_FILE").unwrap_or_else(|_| "sys/env/.env".to_string());
+    let env_file = std::env::var("SYSRAT_ENV_FILE").unwrap_or_else(|_| "sys/env/.env".to_string());
     if let Err(e) = dotenvy::from_filename(&env_file) {
         eprintln!("Warning: Could not load {}: {}", env_file, e);
         eprintln!("Using default configuration values");
@@ -26,13 +25,13 @@ async fn main() {
         Ok(cfg) => Arc::new(cfg),
         Err(e) => {
             eprintln!("Failed to load configuration: {}", e);
-            eprintln!("Make sure config-manager.toml exists in the current directory");
+            eprintln!("Make sure sysrat.toml exists in the current directory");
             std::process::exit(1);
         }
     };
 
     println!(
-        "Loaded {} config files from config-manager.toml",
+        "Loaded {} config files from sysrat.toml",
         app_config.list_files().len()
     );
     let app = Router::new()

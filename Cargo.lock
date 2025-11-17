@@ -192,39 +192,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "config-manager-frontend"
-version = "0.1.0"
-dependencies = [
- "console_error_panic_hook",
- "dotenvy",
- "gloo-net",
- "gloo-timers",
- "ratzilla",
- "serde",
- "serde_json",
- "toml",
- "tui-textarea",
- "wasm-bindgen",
- "wasm-bindgen-futures",
- "web-sys",
-]
-
-[[package]]
-name = "config-manager-server"
-version = "0.1.0"
-dependencies = [
- "axum",
- "dotenvy",
- "serde",
- "serde_json",
- "tokio",
- "toml",
- "tower",
- "tower-http",
- "walkdir",
-]
-
-[[package]]
 name = "console_error_panic_hook"
 version = "0.1.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -999,6 +966,39 @@ name = "sync_wrapper"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0bf256ce5efdfa370213c1dabab5935a12e49f2c58d15e9eac2870d3b4f27263"
+
+[[package]]
+name = "sysrat-frontend"
+version = "0.1.0"
+dependencies = [
+ "console_error_panic_hook",
+ "dotenvy",
+ "gloo-net",
+ "gloo-timers",
+ "ratzilla",
+ "serde",
+ "serde_json",
+ "toml",
+ "tui-textarea",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "web-sys",
+]
+
+[[package]]
+name = "sysrat-server"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "dotenvy",
+ "serde",
+ "serde_json",
+ "tokio",
+ "toml",
+ "tower",
+ "tower-http",
+ "walkdir",
+]
 
 [[package]]
 name = "tap"

@@ -1,9 +1,9 @@
-# CLAUDE.md - AI Assistant Guide for Config Manager
+# CLAUDE.md - AI Assistant Guide for SysRat
 
-This document provides comprehensive guidance for AI assistants working on the Config Manager codebase. It covers architecture, development workflows, conventions, and best practices.
+This document provides comprehensive guidance for AI assistants working on the SysRat codebase. It covers architecture, development workflows, conventions, and best practices.
 
 **Last Updated:** 2025-11-17
-**Version:** 0.1.1
+**Version:** 0.2.0
 
 ---
 
@@ -24,7 +24,7 @@ This document provides comprehensive guidance for AI assistants working on the C
 
 ## Project Overview
 
-**Config Manager** is a full-stack web-based configuration management system written in Rust. It provides:
+**SysRat** is a full-stack web-based configuration management system written in Rust. It provides:
 
 - **Configuration File Management**: Browse, edit, and save system configuration files (nginx, Docker, SSH, etc.)
 - **Docker Container Management**: List, inspect, start, stop, and restart containers
@@ -69,7 +69,7 @@ This document provides comprehensive guidance for AI assistants working on the C
 │  │  ├─ /api/configs (file mgmt)        ││
 │  │  └─ /api/containers (Docker)        ││
 │  ├─────────────────────────────────────┤│
-│  │  Config Manager                     ││
+│  │  SysRat                     ││
 │  │  ├─ File loading & validation       ││
 │  │  ├─ Directory scanning              ││
 │  │  └─ Extension whitelisting          ││
@@ -99,10 +99,10 @@ Both share the `Cargo.lock` file but have separate `Cargo.toml` manifests.
 ## Directory Structure
 
 ```
-/home/user/configmanager-rs/
+/home/user/sysrat-rs/
 ├── Cargo.toml                  # Workspace root
 ├── Cargo.lock                  # Locked dependency versions
-├── config-manager.toml         # Application configuration
+├── sysrat.toml         # Application configuration
 ├── deny.toml                   # Security audit config
 ├── justfile                    # Task automation
 ├── rebuild.py                  # Full build script
@@ -205,7 +205,7 @@ Both share the `Cargo.lock` file but have separate `Cargo.toml` manifests.
 |-----------|------|---------|
 | **Backend** | `server/src/main.rs:1` | Axum server setup, listens on `0.0.0.0:3000` |
 | **Frontend** | `frontend/src/lib.rs:1` | WASM entry point, initializes Ratzilla terminal |
-| **Config** | `config-manager.toml:1` | Application configuration (files, extensions) |
+| **Config** | `sysrat.toml:1` | Application configuration (files, extensions) |
 | **Build** | `rebuild.py:1` | Full build orchestration script (Python) |
 | **Env Config** | `sys/env/.env:1` | Build script environment configuration |
 
@@ -230,8 +230,8 @@ Both share the `Cargo.lock` file but have separate `Cargo.toml` manifests.
 | Run linter | `./sys/rust/clippy.py` or `just clippy` | ❌ `cargo clippy` |
 | Run tests | `./sys/rust/test_rust.py` or `just test` | ❌ `cargo test` |
 | Clean artifacts | `./sys/rust/clean.py` or `just clean` | ❌ `cargo clean` |
-| Start server | `./start.py` or `just start` | ❌ `./target/release/config-manager-server` |
-| Stop server | `./stop.py` or `just stop` | ❌ `pkill config-manager-server` |
+| Start server | `./start.py` or `just start` | ❌ `./target/release/sysrat` |
+| Stop server | `./stop.py` or `just stop` | ❌ `pkill sysrat` |
 
 **Exception**: Direct `cargo clippy -- -D warnings` is allowed for CI/final verification, but prefer the Python script for development.
 
@@ -322,12 +322,12 @@ ps -p $(cat .server.pid)
 
 ```bash
 # Development build with auditable
-cargo auditable build --bin config-manager-server
+cargo auditable build --bin sysrat
 
 # Release build with auditable
-cargo auditable build --release --bin config-manager-server
+cargo auditable build --release --bin sysrat
 
-# Binary location: target/release/config-manager-server
+# Binary location: target/release/sysrat
 ```
 
 **Note**: `cargo-auditable` embeds dependency metadata for security audits.
@@ -558,7 +558,7 @@ cargo clippy --all-targets -- -D warnings
 
 ### File Access Controls
 
-1. **Extension Whitelist** (`config-manager.toml`):
+1. **Extension Whitelist** (`sysrat.toml`):
    ```toml
    [settings]
    allowed_extensions = ["conf", "toml", "txt", "sh", ...]
@@ -574,7 +574,7 @@ cargo clippy --all-targets -- -D warnings
    ```
 
 3. **Configuration Validation**:
-   - Files must be declared in `config-manager.toml`
+   - Files must be declared in `sysrat.toml`
    - No arbitrary path access
    - Path traversal prevention in `validation.rs`
 
@@ -617,8 +617,8 @@ Build scripts load configuration from `sys/env/.env`:
 # Server Configuration
 SERVER_HOST=10.1.1.30     # Display host in status messages
 SERVER_PORT=3000          # Server port
-SERVER_BINARY=config-manager-server
-DISPLAY_NAME=Config Manager
+SERVER_BINARY=sysrat
+DISPLAY_NAME=SysRat
 
 # Build Configuration
 RUST_TOOLCHAIN=stable
@@ -628,7 +628,7 @@ TRUNK_ENABLED=true
 # Paths
 SERVER_DIR=server
 FRONTEND_DIR=frontend
-CONFIG_FILE=config-manager.toml
+CONFIG_FILE=sysrat.toml
 
 # See sys/env/.env.example for full list
 ```
@@ -641,7 +641,7 @@ CONFIG_FILE=config-manager.toml
 
 ### Adding a New Configuration File
 
-1. Edit `config-manager.toml`:
+1. Edit `sysrat.toml`:
    ```toml
    [[files]]
    path = "/etc/myapp/config.conf"
@@ -665,7 +665,7 @@ CONFIG_FILE=config-manager.toml
 
 ### Adding a New Directory to Scan
 
-1. Edit `config-manager.toml`:
+1. Edit `sysrat.toml`:
    ```toml
    [[directories]]
    path = "~/.config/myapp"
@@ -819,7 +819,7 @@ All component themes follow a standardized pattern defined in `frontend/src/them
 
 #### Per-File Theme Support
 
-Configuration files can specify custom theme variants in `config-manager.toml`:
+Configuration files can specify custom theme variants in `sysrat.toml`:
 
 ```toml
 [[files]]
@@ -1067,7 +1067,7 @@ kill <PID>
 tail -f server.log
 
 # Verify config file exists:
-ls -la config-manager.toml
+ls -la sysrat.toml
 ```
 
 **Problem**: Frontend shows "Failed to fetch"
@@ -1080,7 +1080,7 @@ ls -la config-manager.toml
 
 **Problem**: File not appearing in file list
 
-1. Check `config-manager.toml` has entry:
+1. Check `sysrat.toml` has entry:
    ```toml
    [[files]]
    path = "/path/to/file"
@@ -1097,7 +1097,7 @@ ls -la config-manager.toml
 
 **Problem**: "Readonly file" error when saving
 
-- Check `readonly` flag in `config-manager.toml`:
+- Check `readonly` flag in `sysrat.toml`:
   ```toml
   [[files]]
   path = "/etc/nginx/nginx.conf"
@@ -1193,7 +1193,7 @@ cargo clippy --fix --all-targets
    - Use `wasm_bindgen` for browser API access
 
 5. **Don't hardcode paths**:
-   - Use `config-manager.toml` for file paths
+   - Use `sysrat.toml` for file paths
    - Use environment variables for runtime config
 
 ### File References

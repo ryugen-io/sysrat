@@ -33,8 +33,8 @@ def load_env_config(repo_root: Path) -> dict:
         'SYS_DIR': '.sys',
         'GITHUB_DIR': '.github',
         'SCRIPT_DIRS': 'rust',
-        'SERVER_BINARY': 'config-manager-server',
-        'DISPLAY_NAME': 'Config Manager',
+        'SERVER_BINARY': 'sysrat',
+        'DISPLAY_NAME': 'SysRat',
         'SERVER_HOST': '10.1.1.30',
         'SERVER_PORT': '3000',
         'PID_FILE': '.server.pid',
@@ -44,7 +44,7 @@ def load_env_config(repo_root: Path) -> dict:
         'TRUNK_ENABLED': 'true',
         'SERVER_DIR': 'server',
         'FRONTEND_DIR': 'frontend',
-        'CONFIG_FILE': 'config-manager.toml'
+        'CONFIG_FILE': 'sysrat.toml'
     }
 
     sys_env_dir = repo_root / config['SYS_DIR'] / 'env'

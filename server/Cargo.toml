@@ -1,7 +1,11 @@
 [package]
-name = "config-manager-server"
+name = "sysrat-server"
 version = "0.1.0"
 edition = "2024"
+
+[[bin]]
+name = "sysrat"
+path = "src/main.rs"
 
 [dependencies]
 axum = "0.7"

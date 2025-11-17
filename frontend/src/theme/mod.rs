@@ -1,6 +1,6 @@
 /// # Theme Design Pattern
 ///
-/// This module defines the standardized theme system for the Config Manager TUI.
+/// This module defines the standardized theme system for the SysRat TUI.
 ///
 /// ## Architecture
 ///
@@ -14,13 +14,13 @@
 ///
 /// Themes are loaded from embedded TOML files at runtime:
 /// - Default themes embedded in WASM (mocha, latte, frappe, macchiato)
-/// - User custom themes scanned from `~/.config/config-manager/themes/` at build time
+/// - User custom themes scanned from `~/.config/sysrat/themes/` at build time
 /// - Theme preference stored in browser localStorage
 /// - Fallback to Mocha theme if preference not found
 ///
 /// ## Adding Custom Themes
 ///
-/// 1. Create `~/.config/config-manager/themes/my-theme.toml`
+/// 1. Create `~/.config/sysrat/themes/my-theme.toml`
 /// 2. Rebuild frontend: `just build-frontend` or `./rebuild.py`
 /// 3. Select theme from menu (automatically embedded in WASM)
 ///
