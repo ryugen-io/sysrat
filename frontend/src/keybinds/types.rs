@@ -38,4 +38,5 @@ pub struct ContainerListKeybinds {
 pub struct GlobalKeybinds {
     pub save: String,
     pub back_to_files: String,
+    pub cycle_theme: String,
 }

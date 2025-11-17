@@ -3,35 +3,32 @@ use crate::{
     state::{AppState, Pane, refresh},
     utils,
 };
-use ratzilla::event::{KeyCode, KeyEvent};
+use ratzilla::event::KeyEvent;
 use std::{cell::RefCell, rc::Rc};
 use wasm_bindgen_futures::spawn_local;
 
 pub fn handle_keys(state: &mut AppState, state_rc: &Rc<RefCell<AppState>>, key_event: KeyEvent) {
-    match key_event.code {
-        KeyCode::Char('j') | KeyCode::Down => {
-            state.menu.next();
-        }
-        KeyCode::Char('k') | KeyCode::Up => {
-            state.menu.previous();
-        }
-        KeyCode::Enter => {
-            if let Some(selected) = state.menu.selected() {
-                match selected.as_str() {
-                    "Config Files" => {
-                        state.focus = Pane::FileList;
-                        // Always refresh to get latest files from server
-                        refresh::refresh_pane(Pane::FileList, state_rc);
-                    }
-                    "Container" => {
-                        state.focus = Pane::ContainerList;
-                        refresh::refresh_pane(Pane::ContainerList, state_rc);
-                    }
-                    _ => {}
-                }
+    let keybinds = &state.keybinds.menu;
+
+    if super::key_matches(&key_event, &keybinds.navigate_down) {
+        state.menu.next();
+    } else if super::key_matches(&key_event, &keybinds.navigate_up) {
+        state.menu.previous();
+    } else if super::key_matches(&key_event, &keybinds.select)
+        && let Some(selected) = state.menu.selected()
+    {
+        match selected.as_str() {
+            "Config Files" => {
+                state.focus = Pane::FileList;
+                // Always refresh to get latest files from server
+                refresh::refresh_pane(Pane::FileList, state_rc);
             }
+            "Container" => {
+                state.focus = Pane::ContainerList;
+                refresh::refresh_pane(Pane::ContainerList, state_rc);
+            }
+            _ => {}
         }
-        _ => {}
     }
 }
 

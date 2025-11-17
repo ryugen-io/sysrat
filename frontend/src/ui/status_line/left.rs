@@ -52,7 +52,10 @@ pub fn render(f: &mut Frame, state: &AppState, area: Rect) {
     }
 
     let help_text = match (state.focus, state.vim_mode) {
-        (Pane::Menu, _) => format!(" | {}", state.keybinds.menu.help_text()),
+        (Pane::Menu, _) => format!(
+            " | {}",
+            state.keybinds.menu.help_text(&state.keybinds.global)
+        ),
         (Pane::FileList, _) => {
             format!(
                 " | {}",
@@ -65,7 +68,13 @@ pub fn render(f: &mut Frame, state: &AppState, area: Rect) {
         (Pane::Editor, VimMode::Insert) => {
             format!(" | {}", state.keybinds.global.editor_insert_help_text())
         }
-        (Pane::ContainerList, _) => format!(" | {}", state.keybinds.container_list.help_text()),
+        (Pane::ContainerList, _) => format!(
+            " | {}",
+            state
+                .keybinds
+                .container_list
+                .help_text(&state.keybinds.global)
+        ),
     };
     spans.push(Span::styled(
         help_text,

@@ -1,10 +1,10 @@
 use super::types::*;
 
 impl MenuKeybinds {
-    pub fn help_text(&self) -> String {
+    pub fn help_text(&self, global: &GlobalKeybinds) -> String {
         format!(
-            "{}/{}:navigate {}:select",
-            self.navigate_down, self.navigate_up, self.select
+            "{}/{}:navigate {}:select {}:theme",
+            self.navigate_down, self.navigate_up, self.select, global.cycle_theme
         )
     }
 }
@@ -19,7 +19,7 @@ impl FileListKeybinds {
 }
 
 impl ContainerListKeybinds {
-    pub fn help_text(&self) -> String {
+    pub fn help_text(&self, _global: &GlobalKeybinds) -> String {
         format!(
             "{}/{}:navigate {}:start {}:stop {}:restart {}:menu",
             self.navigate_down,

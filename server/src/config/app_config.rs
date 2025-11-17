@@ -76,8 +76,8 @@ impl AppConfig {
     ///
     /// Search order:
     /// 1. CONFIG_MANAGER_CONFIG env var
-    /// 2. XDG_CONFIG_HOME/config-manager/config.toml
-    /// 3. ~/.config/config-manager/config.toml
+    /// 2. XDG_CONFIG_HOME/config-manager/config-manager.toml
+    /// 3. ~/.config/config-manager/config-manager.toml
     /// 4. ./config-manager.toml (fallback)
     fn config_path() -> String {
         use std::path::Path;
@@ -89,7 +89,7 @@ impl AppConfig {
 
         // 2. XDG_CONFIG_HOME (if set)
         if let Ok(xdg_config) = std::env::var("XDG_CONFIG_HOME") {
-            let path = format!("{}/config-manager/config.toml", xdg_config);
+            let path = format!("{}/config-manager/config-manager.toml", xdg_config);
             if Path::new(&path).exists() {
                 return path;
             }
@@ -97,7 +97,7 @@ impl AppConfig {
 
         // 3. ~/.config/ (XDG default)
         if let Ok(home) = std::env::var("HOME") {
-            let path = format!("{}/.config/config-manager/config.toml", home);
+            let path = format!("{}/.config/config-manager/config-manager.toml", home);
             if Path::new(&path).exists() {
                 return path;
             }

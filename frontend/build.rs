@@ -1,6 +1,6 @@
 mod build_helpers;
 
-use build_helpers::{date, hash, theme, version};
+use build_helpers::{date, hash, keybinds, theme, version};
 
 fn main() {
     // Load environment from sys/env/.env
@@ -19,6 +19,9 @@ fn main() {
 
     // Load theme configuration
     theme::load_theme_config();
+
+    // Load keybinds configuration
+    keybinds::load_keybinds_config();
 
     // Rerun if files change
     println!("cargo:rerun-if-changed=Cargo.toml");

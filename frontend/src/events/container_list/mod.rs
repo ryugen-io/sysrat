@@ -3,19 +3,28 @@ mod details;
 mod navigation;
 
 use crate::state::{AppState, Pane};
-use ratzilla::event::{KeyCode, KeyEvent};
+use ratzilla::event::KeyEvent;
 use std::{cell::RefCell, rc::Rc};
 
 pub fn handle_keys(state: &mut AppState, state_rc: &Rc<RefCell<AppState>>, key_event: KeyEvent) {
-    match key_event.code {
-        KeyCode::Char('j') | KeyCode::Down => navigation::next(state),
-        KeyCode::Char('k') | KeyCode::Up => navigation::previous(state),
-        KeyCode::Enter => details::load_details(state, state_rc),
-        KeyCode::Char('s') => actions::start_container(state, state_rc),
-        KeyCode::Char('x') => actions::stop_container(state, state_rc),
-        KeyCode::Char('r') => actions::restart_container(state, state_rc),
-        KeyCode::Esc => state.focus = Pane::Menu,
-        KeyCode::Left if key_event.ctrl => state.focus = Pane::Menu,
-        _ => {}
+    let keybinds = &state.keybinds.container_list;
+
+    if super::key_matches(&key_event, &keybinds.navigate_down) {
+        navigation::next(state);
+    } else if super::key_matches(&key_event, &keybinds.navigate_up) {
+        navigation::previous(state);
+    } else if super::key_matches(&key_event, &keybinds.start_container) {
+        actions::start_container(state, state_rc);
+    } else if super::key_matches(&key_event, &keybinds.stop_container) {
+        actions::stop_container(state, state_rc);
+    } else if super::key_matches(&key_event, &keybinds.restart_container) {
+        actions::restart_container(state, state_rc);
+    } else if super::key_matches(&key_event, &keybinds.back_to_menu) {
+        state.focus = Pane::Menu;
+    } else {
+        // Enter to view details (not configurable for now)
+        if super::match_key_without_mods(&key_event, "Enter") {
+            details::load_details(state, state_rc);
+        }
     }
 }
