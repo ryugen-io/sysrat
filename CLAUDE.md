@@ -505,7 +505,7 @@ Follow the patterns established in:
 
 ### Current State
 
-⚠️ **No automated tests exist currently.**
+⚠ **No automated tests exist currently.**
 
 The project relies on:
 1. Manual testing via the web interface
