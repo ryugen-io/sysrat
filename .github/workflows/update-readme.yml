@@ -5,8 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'server/**'
-      - 'frontend/**'
+      # Only trigger on new management scripts or config changes
       - 'sysrat.toml'
       - 'sys/env/.env.example'
       - 'justfile'
@@ -16,10 +15,11 @@ on:
       # Don't trigger on README.md or workflow changes to prevent loops
       - '!README.md'
       - '!.github/workflows/update-readme.yml'
-      # Exclude build/dev tools (but allow sys/env)
-      - '!sys/rust/**'
-      - '!sys/utils/**'
-      - '!sys/theme/**'
+      # Exclude all sys/ subdirectories (build/dev tools)
+      - '!sys/**'
+      # Don't trigger on code changes (only new files matter)
+      - '!server/**'
+      - '!frontend/**'
 
 jobs:
   validation:
