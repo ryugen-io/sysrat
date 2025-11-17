@@ -28,36 +28,33 @@ def get_build_env() -> dict:
 
 
 def load_env_config(repo_root: Path) -> dict:
-    """Load configuration from .env file"""
-    config = {
-        'SYS_DIR': '.sys',
-        'GITHUB_DIR': '.github',
-        'SCRIPT_DIRS': 'rust',
-        'SERVER_BINARY': 'sysrat',
-        'DISPLAY_NAME': 'sysrat',
-        'SERVER_HOST': '10.1.1.30',
-        'SERVER_PORT': '3000',
-        'PID_FILE': '.server.pid',
-        'LOG_FILE': 'server.log',
-        'RUST_TOOLCHAIN': 'stable',
-        'CARGO_AUDITABLE': 'true',
-        'TRUNK_ENABLED': 'true',
-        'SERVER_DIR': 'server',
-        'FRONTEND_DIR': 'frontend',
-        'CONFIG_FILE': 'sysrat.toml'
-    }
+    """Load configuration from sys/env/.env file"""
+    env_file = repo_root / 'sys' / 'env' / '.env'
 
-    sys_env_dir = repo_root / config['SYS_DIR'] / 'env'
-    for env_name in ['.env', '.env.example']:
-        env_file = sys_env_dir / env_name
-        if env_file.exists():
-            with open(env_file, 'r') as f:
-                for line in f:
-                    line = line.strip()
-                    if line and not line.startswith('#') and '=' in line:
-                        key, value = line.split('=', 1)
-                        config[key] = value
-            break
+    if not env_file.exists():
+        raise FileNotFoundError(
+            f"Configuration file not found: {env_file}\n"
+            f"Copy sys/env/.env.example to sys/env/.env and configure it."
+        )
+
+    config = {}
+    with open(env_file, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if line and not line.startswith('#') and '=' in line:
+                key, value = line.split('=', 1)
+                # Remove quotes if present
+                value = value.strip('"').strip("'")
+                config[key] = value
+
+    # Validate required keys
+    required_keys = [
+        'SERVER_BINARY', 'DISPLAY_NAME', 'SERVER_HOST', 'SERVER_PORT',
+        'SERVER_DIR', 'FRONTEND_DIR', 'RUST_TOOLCHAIN'
+    ]
+    missing = [key for key in required_keys if key not in config]
+    if missing:
+        raise ValueError(f"Missing required config keys in .env: {', '.join(missing)}")
 
     return config
 
