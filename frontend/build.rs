@@ -1,6 +1,6 @@
 mod build_helpers;
 
-use build_helpers::{ascii, date, hash, keybinds, theme, version};
+use build_helpers::{ascii, date, hash, keybinds, statusline, theme, version};
 
 fn main() {
     // Load environment from sys/env/.env
@@ -25,6 +25,9 @@ fn main() {
 
     // Load ASCII art
     ascii::load_ascii_art();
+
+    // Load status line configuration
+    statusline::load_statusline_config();
 
     // Rerun if files change
     println!("cargo:rerun-if-changed=Cargo.toml");

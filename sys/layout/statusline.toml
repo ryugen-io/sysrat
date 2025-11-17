@@ -1,0 +1,168 @@
+# Status Line Layout Configuration
+# Defines which components appear in the status line for each pane
+
+[menu]
+# Menu pane shows only build information (no status info)
+rows = [
+    { components = [
+        { type = "text", value = " last build: ", style = "label" },
+        { type = "build_date", style = "value" },
+        { type = "text", value = " (", style = "label" },
+        { type = "build_hash", style = "value" },
+        { type = "text", value = ")", style = "label" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Rust ", style = "label" },
+        { type = "rust_version", style = "value" },
+        { type = "text", value = " (Edition ", style = "label" },
+        { type = "rust_edition", style = "value" },
+        { type = "text", value = ")", style = "label" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Ratzilla v", style = "label" },
+        { type = "dependency", name = "ratzilla", style = "value" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Ratatui v", style = "label" },
+        { type = "dependency", name = "ratatui", style = "value" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Axum v", style = "label" },
+        { type = "dependency", name = "axum", style = "value" },
+    ]},
+]
+
+[file_list]
+# File list shows status info + build info
+rows = [
+    { components = [{ type = "spacer" }] },
+    { components = [
+        { type = "vim_mode" },
+        { type = "separator", value = " | " },
+        { type = "filename" },
+        { type = "modified_indicator" },
+        { type = "status_message" },
+        { type = "separator", value = " | " },
+        { type = "help_text" },
+    ]},
+    { components = [{ type = "spacer" }] },
+    { components = [
+        { type = "text", value = " last build: ", style = "label" },
+        { type = "build_date", style = "value" },
+        { type = "text", value = " (", style = "label" },
+        { type = "build_hash", style = "value" },
+        { type = "text", value = ")", style = "label" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Rust ", style = "label" },
+        { type = "rust_version", style = "value" },
+        { type = "text", value = " (Edition ", style = "label" },
+        { type = "rust_edition", style = "value" },
+        { type = "text", value = ")", style = "label" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Ratzilla v", style = "label" },
+        { type = "dependency", name = "ratzilla", style = "value" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Ratatui v", style = "label" },
+        { type = "dependency", name = "ratatui", style = "value" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Axum v", style = "label" },
+        { type = "dependency", name = "axum", style = "value" },
+    ]},
+]
+
+[editor]
+# Editor shows status info + build info (same as file_list)
+rows = [
+    { components = [{ type = "spacer" }] },
+    { components = [
+        { type = "vim_mode" },
+        { type = "separator", value = " | " },
+        { type = "filename" },
+        { type = "modified_indicator" },
+        { type = "status_message" },
+        { type = "separator", value = " | " },
+        { type = "help_text" },
+    ]},
+    { components = [{ type = "spacer" }] },
+    { components = [
+        { type = "text", value = " last build: ", style = "label" },
+        { type = "build_date", style = "value" },
+        { type = "text", value = " (", style = "label" },
+        { type = "build_hash", style = "value" },
+        { type = "text", value = ")", style = "label" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Rust ", style = "label" },
+        { type = "rust_version", style = "value" },
+        { type = "text", value = " (Edition ", style = "label" },
+        { type = "rust_edition", style = "value" },
+        { type = "text", value = ")", style = "label" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Ratzilla v", style = "label" },
+        { type = "dependency", name = "ratzilla", style = "value" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Ratatui v", style = "label" },
+        { type = "dependency", name = "ratatui", style = "value" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Axum v", style = "label" },
+        { type = "dependency", name = "axum", style = "value" },
+    ]},
+]
+
+[container_list]
+# Container list shows status info (no vim mode) + build info
+rows = [
+    { components = [{ type = "spacer" }] },
+    { components = [
+        { type = "filename" },
+        { type = "status_message" },
+        { type = "separator", value = " | " },
+        { type = "help_text" },
+    ]},
+    { components = [{ type = "spacer" }] },
+    { components = [
+        { type = "text", value = " last build: ", style = "label" },
+        { type = "build_date", style = "value" },
+        { type = "text", value = " (", style = "label" },
+        { type = "build_hash", style = "value" },
+        { type = "text", value = ")", style = "label" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Rust ", style = "label" },
+        { type = "rust_version", style = "value" },
+        { type = "text", value = " (Edition ", style = "label" },
+        { type = "rust_edition", style = "value" },
+        { type = "text", value = ")", style = "label" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Ratzilla v", style = "label" },
+        { type = "dependency", name = "ratzilla", style = "value" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Ratatui v", style = "label" },
+        { type = "dependency", name = "ratatui", style = "value" },
+        { type = "separator", value = " | " },
+        { type = "text", value = "Axum v", style = "label" },
+        { type = "dependency", name = "axum", style = "value" },
+    ]},
+]
+
+# Component Type Reference:
+# =========================
+#
+# BASIC COMPONENTS:
+# - "spacer": Empty line (no content)
+# - "separator": Visual separator (requires "value" field, e.g., " | ")
+# - "text": Custom static text (requires "value" field and optional "style")
+#
+# STATE-BASED COMPONENTS (from AppState):
+# - "vim_mode": NORMAL/INSERT indicator (only shows in FileList/Editor panes)
+# - "filename": Current file name (shows "No file" if none loaded)
+# - "modified_indicator": " [modified]" suffix (only shows if file is dirty)
+# - "status_message": Status/error messages (error messages get special styling)
+# - "help_text": Keybind help text (per-pane, excludes Menu pane)
+#
+# BUILD-TIME COMPONENTS (from env! macros):
+# - "build_date": Build timestamp (e.g., "2025-11-17 14:32:15")
+# - "build_hash": Git commit hash (e.g., "cc59680")
+# - "rust_version": Rust compiler version (e.g., "1.85.0")
+# - "rust_edition": Rust edition (e.g., "2024")
+# - "dependency": Dependency version (requires "name" field: ratzilla, ratatui, axum)
+#
+# STYLE OPTIONS:
+# - "label": Dimmed/subdued text style (for labels like "last build:")
+# - "value": Highlighted value style (for actual data values)
+# - "error": Error message style (red/urgent styling)
+# - null/omitted: Uses default background style
