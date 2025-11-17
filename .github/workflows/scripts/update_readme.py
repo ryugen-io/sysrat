@@ -152,25 +152,25 @@ def get_description(filename: str) -> str:
 def generate_readme(files: dict, versions: dict, git_info: dict) -> str:
     """Generate README with file links organized by category."""
 
-    # Nerd Font Icons (matching theme.py)
-    ROCKET = ''
-    SERVER = '󰒋'
-    HAMMER = ''
-    FOLDER = ''
-    FILE = ''
-    CHART = '󰈙'
-    INFO = ''
+    # Nerd Font Icons (exact same as theme.py Icons class)
+    ROCKET = '\uf135'
+    SERVER = '\uf233'
+    HAMMER = '\uf6e3'
+    FOLDER = '\uf07b'
+    FILE = '\uf15b'
+    CHART = '\uf200'
+    INFO = '\uf05a'
 
     readme = "# SysRat\n\n"
     readme += "**SysRat** is a full-stack web-based configuration management system written in Rust.\n\n"
     readme += f"- **Backend**: {SERVER} Rust + Axum (async web framework)\n"
     readme += f"- **Frontend**: {CHART} WASM + Ratzilla (terminal UI in the browser)\n"
-    readme += f"- **Features**: Configuration file management, Docker container management\n\n"
+    readme += "- **Features**: Configuration file management, Docker container management\n\n"
 
     # Build info
     build_date = git_info.get('date', 'unknown')
     build_hash = git_info.get('hash', 'unknown')
-    readme += f"[build] {INFO}  **Last Updated**: {build_date} (`{build_hash}`)\n\n"
+    readme += f"{INFO} **Last Updated**: {build_date} (`{build_hash}`)\n\n"
 
     # Tech Stack with versions
     readme += f"## {HAMMER} Tech Stack\n\n"

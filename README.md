@@ -2,38 +2,38 @@
 
 **SysRat** is a full-stack web-based configuration management system written in Rust.
 
-- **Backend**: 󰒋 Rust + Axum (async web framework)
-- **Frontend**: 󰈙 WASM + Ratzilla (terminal UI in the browser)
+- **Backend**:  Rust + Axum (async web framework)
+- **Frontend**:  WASM + Ratzilla (terminal UI in the browser)
 - **Features**: Configuration file management, Docker container management
 
-[build]   **Last Updated**: 2025-11-17 (`100da7e`)
+ **Last Updated**: 2025-11-17 (`3c31de1`)
 
-##  Tech Stack
+##  Tech Stack
 
 **Rust Edition 2024**
 
-- **Backend**: 󰒋 Axum v0.7
-- **Frontend**: 󰈙 Ratzilla v0.2 (Ratatui-based WASM TUI)
-- **Build**:  Trunk (WASM bundler), Cargo (Rust toolchain)
+- **Backend**:  Axum v0.7
+- **Frontend**:  Ratzilla v0.2 (Ratatui-based WASM TUI)
+- **Build**:  Trunk (WASM bundler), Cargo (Rust toolchain)
 
-##  Management Scripts
+##  Management Scripts
 
--  [rebuild.py](rebuild.py) - Build and deploy (backend + frontend)
--  [start.py](start.py) - Start the SysRat server
--  [status.py](status.py) - Check server status and stats
--  [stop.py](stop.py) - Stop the SysRat server
+-  [rebuild.py](rebuild.py) - Build and deploy (backend + frontend)
+-  [start.py](start.py) - Start the SysRat server
+-  [status.py](status.py) - Check server status and stats
+-  [stop.py](stop.py) - Stop the SysRat server
 
-##  Configuration
+##  Configuration
 
--  [CLAUDE.md](CLAUDE.md) - Developer documentation and AI assistant guide
--  [justfile](justfile) - Task runner commands
--  [sys/env/.env.example](sys/env/.env.example) - Environment configuration template
--  [sysrat.toml](sysrat.toml) - Application configuration
+-  [CLAUDE.md](CLAUDE.md) - Developer documentation and AI assistant guide
+-  [justfile](justfile) - Task runner commands
+-  [sys/env/.env.example](sys/env/.env.example) - Environment configuration template
+-  [sysrat.toml](sysrat.toml) - Application configuration
 
-##  Project Structure
+##  Project Structure
 
--  `frontend/` - WASM-based TUI frontend (Ratzilla)
--  `server/` - Backend API server (Rust + Axum)
+-  `frontend/` - WASM-based TUI frontend (Ratzilla)
+-  `server/` - Backend API server (Rust + Axum)
 
 ## Quick Start
 
