@@ -61,8 +61,9 @@ pub fn render(f: &mut Frame, state: &AppState, area: Rect) {
     }
 
     // Help text - add separator only if spans is not empty
+    // Note: Menu pane has keybinds in dedicated box, no need to show in status line
     let help_text = match (state.focus, state.vim_mode) {
-        (Pane::Menu, _) => state.keybinds.menu.help_text(&state.keybinds.global),
+        (Pane::Menu, _) => String::new(), // No keybinds in status line for Menu
         (Pane::FileList, _) => state.keybinds.file_list.help_text(&state.keybinds.global),
         (Pane::Editor, VimMode::Normal) => state.keybinds.global.editor_normal_help_text(),
         (Pane::Editor, VimMode::Insert) => state.keybinds.global.editor_insert_help_text(),
@@ -72,13 +73,16 @@ pub fn render(f: &mut Frame, state: &AppState, area: Rect) {
             .help_text(&state.keybinds.global),
     };
 
-    if !spans.is_empty() {
-        spans.push(Span::raw(" | "));
+    // Only add help text if not empty
+    if !help_text.is_empty() {
+        if !spans.is_empty() {
+            spans.push(Span::raw(" | "));
+        }
+        spans.push(Span::styled(
+            help_text,
+            StatusLineTheme::help_text_style(theme),
+        ));
     }
-    spans.push(Span::styled(
-        help_text,
-        StatusLineTheme::help_text_style(theme),
-    ));
 
     let status_line = Paragraph::new(Line::from(spans))
         .style(StatusLineTheme::background(theme))

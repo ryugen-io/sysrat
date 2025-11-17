@@ -1,6 +1,6 @@
 mod build_helpers;
 
-use build_helpers::{date, hash, keybinds, theme, version};
+use build_helpers::{ascii, date, hash, keybinds, theme, version};
 
 fn main() {
     // Load environment from sys/env/.env
@@ -23,6 +23,9 @@ fn main() {
     // Load keybinds configuration
     keybinds::load_keybinds_config();
 
+    // Load ASCII art
+    ascii::load_ascii_art();
+
     // Rerun if files change
     println!("cargo:rerun-if-changed=Cargo.toml");
     println!("cargo:rerun-if-changed=../sys/theme/theme.toml");
@@ -30,6 +33,8 @@ fn main() {
     println!("cargo:rerun-if-changed=themes/latte.toml");
     println!("cargo:rerun-if-changed=themes/frappe.toml");
     println!("cargo:rerun-if-changed=themes/macchiato.toml");
+    println!("cargo:rerun-if-changed=assets/sysrat.ascii");
+    println!("cargo:rerun-if-changed=assets/menu-text.ascii");
     println!("cargo:rerun-if-changed=../.git/HEAD");
     println!("cargo:rerun-if-changed=../.git/refs/heads");
 }

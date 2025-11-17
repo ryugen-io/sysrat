@@ -1,3 +1,4 @@
+pub mod ascii;
 pub mod date;
 pub mod hash;
 pub mod keybinds;
