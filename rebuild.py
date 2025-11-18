@@ -14,10 +14,12 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 REPO_ROOT = SCRIPT_DIR
 sys.path.insert(0, str(REPO_ROOT / 'sys' / 'theme'))
+sys.path.insert(0, str(REPO_ROOT / 'sys' / 'utils'))
 
 from theme import (  # noqa: E402
     Colors, Icons, log_success, log_error, log_warn, log_info
 )
+from xdg_paths import get_log_file, get_pid_file  # noqa: E402
 
 
 def get_build_env() -> dict:
@@ -145,7 +147,8 @@ def stop_servers(config: dict):
     """Stop running servers"""
     log_info("Stopping running servers...")
 
-    pid_file = REPO_ROOT / config['PID_FILE']
+    app_name = 'sysrat'
+    pid_file = get_pid_file(app_name, config)
     server_binary = config['SERVER_BINARY']
 
     # Check PID file
@@ -299,8 +302,9 @@ def start_server(config: dict) -> bool:
     print(f"{Colors.MAUVE}[rebuild]{Colors.NC} {Icons.ROCKET}  Starting server...")
     print()
 
-    log_file = REPO_ROOT / config['LOG_FILE']
-    pid_file = REPO_ROOT / config['PID_FILE']
+    app_name = 'sysrat'
+    log_file = get_log_file(app_name, config)
+    pid_file = get_pid_file(app_name, config)
     server_binary = config['SERVER_BINARY']
 
     # Remove old log file
