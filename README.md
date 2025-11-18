@@ -4,7 +4,7 @@
 sysrat-rs/
 ├── .github/
 │   ├── logs/
-│   │   └── 20251118-121430-workflow.log
+│   │   └── 20251118-121616-workflow.log
 │   ├── skips/
 │   │   └── .skip.update-readme.example
 │   └── workflows/
@@ -170,8 +170,6 @@ sysrat-rs/
 │       ├── remove_emojis.py
 │       ├── venv.py
 │       └── xdg_paths.py
-├── .env.example
-├── .skip-ci
 ├── Cargo.lock
 ├── Cargo.toml
 ├── CLAUDE.md
