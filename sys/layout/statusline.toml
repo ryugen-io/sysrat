@@ -33,12 +33,9 @@ rows = [
 rows = [
     { components = [{ type = "spacer" }] },
     { components = [
-        { type = "text", value = " " },
         { type = "vim_mode" },
-        { type = "text", value = " " },
         { type = "separator", value = " | " },
         { type = "filename" },
-        { type = "text", value = " " },
         { type = "modified_indicator" },
         { type = "status_message" },
         { type = "separator", value = " | " },
@@ -74,12 +71,9 @@ rows = [
 rows = [
     { components = [{ type = "spacer" }] },
     { components = [
-        { type = "text", value = " " },
         { type = "vim_mode" },
-        { type = "text", value = " " },
         { type = "separator", value = " | " },
         { type = "filename" },
-        { type = "text", value = " " },
         { type = "modified_indicator" },
         { type = "status_message" },
         { type = "separator", value = " | " },
@@ -155,14 +149,19 @@ rows = [
 #           Use this for spacing: { type = "text", value = " " }
 #
 # STATE-BASED COMPONENTS (from AppState):
-# NOTE: These components render WITHOUT leading/trailing spaces!
-#       Use { type = "text", value = " " } for spacing between components.
+# NOTE: Spacing is AUTOMATIC! The renderer adds spaces between content components.
+#       Separators and explicit text components handle their own spacing.
 #
-# - "vim_mode": NORMAL/INSERT indicator (no spaces, only shows in FileList/Editor)
-# - "filename": Current file name or "No file" (no spaces)
-# - "modified_indicator": [OK] or [modified] (no spaces, always visible)
-# - "status_message": Status/error messages (no spaces, error messages get special styling)
-# - "help_text": Keybind help text (no spaces, per-pane, excludes Menu pane)
+# - "vim_mode": NORMAL/INSERT indicator (only shows in FileList/Editor)
+# - "filename": Current file name or "No file"
+# - "modified_indicator": [OK] or [modified] (always visible)
+# - "status_message": Status/error messages (only when message exists, error messages get special styling)
+# - "help_text": Keybind help text (per-pane, excludes Menu pane)
+#
+# AUTOMATIC SPACING RULES:
+# - Spaces are added between content components (vim_mode, filename, etc.)
+# - No spaces added before/after separators (they include their own spacing)
+# - No spaces added before/after text components with only whitespace
 #
 # BUILD-TIME COMPONENTS (from env! macros):
 # - "build_date": Build timestamp (e.g., "2025-11-17 14:32:15")

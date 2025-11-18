@@ -1,5 +1,6 @@
 mod components;
 mod config;
+mod rendering;
 
 use crate::{state::AppState, theme::status_line::StatusLineTheme};
 use config::StatusLineConfig;
@@ -47,14 +48,7 @@ pub fn render(f: &mut Frame, state: &AppState, area: Rect) {
 
     // Render each row
     for (row_idx, row_config) in pane_config.rows.iter().enumerate() {
-        let mut spans = vec![];
-
-        // Render each component in the row
-        for component_config in &row_config.components {
-            if let Some(span) = components::render_component(component_config, state, theme) {
-                spans.push(span);
-            }
-        }
+        let spans = rendering::render_row_with_spacing(row_config, state, theme);
 
         let line = Paragraph::new(Line::from(spans))
             .style(StatusLineTheme::background(theme))
