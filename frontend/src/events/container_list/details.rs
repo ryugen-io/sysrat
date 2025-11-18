@@ -13,9 +13,11 @@ pub(super) fn load_details(state: &AppState, state_rc: &Rc<RefCell<AppState>>) {
         spawn_local(async move {
             match api::fetch_container_details(&container_id).await {
                 Ok(details) => {
-                    let mut st = state_clone.borrow_mut();
-                    st.container_details = Some(details);
-                    st.set_status("[loaded]".to_string());
+                    {
+                        let mut st = state_clone.borrow_mut();
+                        st.container_details = Some(details);
+                    }
+                    status_helper::set_status_timed(&state_clone, "[loaded]");
                 }
                 Err(e) => {
                     status_helper::set_status_timed(

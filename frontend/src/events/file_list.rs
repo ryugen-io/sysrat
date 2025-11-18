@@ -28,11 +28,13 @@ pub fn handle_keys(state: &mut AppState, state_rc: &Rc<RefCell<AppState>>, key_e
         spawn_local(async move {
             match api::fetch_file_content(&fileinfo.name).await {
                 Ok(content) => {
-                    let mut st = state_clone.borrow_mut();
-                    st.editor.load_content(fileinfo.name.clone(), content);
-                    st.dirty = false;
-                    st.focus = Pane::Editor;
-                    st.set_status("[loaded]".to_string());
+                    {
+                        let mut st = state_clone.borrow_mut();
+                        st.editor.load_content(fileinfo.name.clone(), content);
+                        st.dirty = false;
+                        st.focus = Pane::Editor;
+                    }
+                    status_helper::set_status_timed(&state_clone, "[loaded]");
                 }
                 Err(e) => {
                     {

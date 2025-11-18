@@ -53,13 +53,18 @@ pub fn load_pane_data(app_state: &Rc<RefCell<AppState>>) {
             spawn_local(async move {
                 match api::fetch_file_list().await {
                     Ok(files) => {
-                        let mut st = state_clone.borrow_mut();
-                        // Only save to cache if data changed
-                        if st.file_list.files != files {
-                            storage::generic::save("file-list", &files);
+                        {
+                            let mut st = state_clone.borrow_mut();
+                            // Only save to cache if data changed
+                            if st.file_list.files != files {
+                                storage::generic::save("file-list", &files);
+                            }
+                            st.file_list.set_files(files);
                         }
-                        st.file_list.set_files(files);
-                        st.set_status("Restored session");
+                        crate::state::status_helper::set_status_timed(
+                            &state_clone,
+                            "Restored session",
+                        );
                     }
                     Err(e) => {
                         storage::generic::clear("file-list");
@@ -74,8 +79,7 @@ pub fn load_pane_data(app_state: &Rc<RefCell<AppState>>) {
         Pane::ContainerList => {
             // Load container list if we restored to ContainerList
             crate::state::refresh::refresh_pane(Pane::ContainerList, app_state);
-            let mut state = app_state.borrow_mut();
-            state.set_status("Restored session");
+            crate::state::status_helper::set_status_timed(app_state, "Restored session");
         }
         Pane::Menu => {
             let mut state = app_state.borrow_mut();
