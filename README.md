@@ -4,7 +4,7 @@
 sysrat-rs/
 ├── .github/
 │   ├── logs/
-│   │   └── 20251118-121616-workflow.log
+│   │   └── 20251118-140653-workflow.log
 │   ├── skips/
 │   │   └── .skip.update-readme.example
 │   └── workflows/
@@ -91,6 +91,11 @@ sysrat-rs/
 │   │   │   │   ├── mod.rs
 │   │   │   │   ├── network.rs
 │   │   │   │   └── storage.rs
+│   │   │   ├── menu/
+│   │   │   │   ├── center.rs
+│   │   │   │   ├── keybinds.rs
+│   │   │   │   ├── mod.rs
+│   │   │   │   └── rat_ascii.rs
 │   │   │   ├── status_line/
 │   │   │   │   ├── components/
 │   │   │   │   │   ├── build.rs
@@ -102,11 +107,12 @@ sysrat-rs/
 │   │   │   ├── container_list.rs
 │   │   │   ├── editor.rs
 │   │   │   ├── file_list.rs
-│   │   │   ├── menu.rs
 │   │   │   └── mod.rs
 │   │   ├── utils/
 │   │   │   ├── error.rs
 │   │   │   └── mod.rs
+│   │   ├── dom.rs
+│   │   ├── init.rs
 │   │   └── lib.rs
 │   ├── themes/
 │   │   ├── frappe.toml
@@ -117,6 +123,7 @@ sysrat-rs/
 │   ├── Cargo.toml
 │   ├── index.html
 │   └── keybinds.toml
+├── ratatui/
 ├── server/
 │   ├── src/
 │   │   ├── config/
@@ -148,6 +155,9 @@ sysrat-rs/
 ├── sys/
 │   ├── env/
 │   │   └── .env.example
+│   ├── html/
+│   │   ├── htmlformat.py
+│   │   └── htmllint.py
 │   ├── layout/
 │   │   └── statusline.toml
 │   ├── rust/
@@ -177,6 +187,7 @@ sysrat-rs/
 ├── justfile
 ├── README.md
 ├── rebuild.py
+├── screen.png
 ├── start.py
 ├── status.py
 ├── stop.py
