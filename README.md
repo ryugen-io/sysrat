@@ -4,7 +4,7 @@
 sysrat-rs/
 ├── .github/
 │   ├── logs/
-│   │   └── 20251118-150128-workflow.log
+│   │   └── 20251118-150406-workflow.log
 │   ├── skips/
 │   │   └── .skip.update-readme.example
 │   └── workflows/
@@ -107,6 +107,9 @@ sysrat-rs/
 │   │   │   │   │   ├── mod.rs
 │   │   │   │   │   ├── state.rs
 │   │   │   │   │   └── text.rs
+│   │   │   │   ├── rendering/
+│   │   │   │   │   ├── mod.rs
+│   │   │   │   │   └── spacing.rs
 │   │   │   │   ├── config.rs
 │   │   │   │   └── mod.rs
 │   │   │   ├── container_list.rs
