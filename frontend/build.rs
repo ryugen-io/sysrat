@@ -32,10 +32,18 @@ fn main() {
     // Rerun if files change
     println!("cargo:rerun-if-changed=Cargo.toml");
     println!("cargo:rerun-if-changed=../sys/theme/theme.toml");
-    println!("cargo:rerun-if-changed=themes/mocha.toml");
-    println!("cargo:rerun-if-changed=themes/latte.toml");
-    println!("cargo:rerun-if-changed=themes/frappe.toml");
-    println!("cargo:rerun-if-changed=themes/macchiato.toml");
+
+    // Dynamically track all theme files
+    if let Ok(entries) = std::fs::read_dir("themes") {
+        for entry in entries.flatten() {
+            if let Some(path) = entry.path().to_str() {
+                if path.ends_with(".toml") {
+                    println!("cargo:rerun-if-changed={}", path);
+                }
+            }
+        }
+    }
+
     println!("cargo:rerun-if-changed=assets/sysrat.ascii");
     println!("cargo:rerun-if-changed=assets/menu-text.ascii");
     println!("cargo:rerun-if-changed=../.git/HEAD");
