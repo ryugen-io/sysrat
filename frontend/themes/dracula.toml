@@ -15,6 +15,12 @@ comment = [98, 114, 164]    # Dimmed text (Comment)
 selection = [68, 71, 90]    # Selection background
 background = [40, 42, 54]   # Dark background
 
+# Additional background colors (darker variants)
+mantle = [25, 27, 35]       # Darkest background for main panel
+surface1 = [68, 71, 90]     # Surface for panels
+overlay1 = [98, 114, 164]   # Borders and overlays
+subtext0 = [98, 114, 164]   # Dimmed text
+
 [semantic]
 # Semantic color mappings
 accent = "purple"

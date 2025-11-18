@@ -16,6 +16,12 @@ dim_text = [181, 189, 207]  # Faded white-blue
 selection = [54, 38, 68]    # Dark purple selection
 background = [23, 20, 33]   # Very dark purple-black
 
+# Additional background colors (darker variants)
+mantle = [15, 12, 22]       # Darkest background for main panel
+surface1 = [54, 38, 68]     # Surface for panels (dark purple)
+overlay1 = [181, 189, 207]  # Borders and overlays (dimmed)
+subtext0 = [181, 189, 207]  # Dimmed text
+
 [semantic]
 # Semantic color mappings
 accent = "hot_pink"

@@ -14,6 +14,12 @@ gray = [168, 153, 132]      # Dimmed text (gray)
 selection = [80, 73, 69]    # Selection background (bg2)
 background = [40, 40, 40]   # Dark background (bg0)
 
+# Additional background colors (darker variants)
+mantle = [29, 32, 33]       # Darkest background for main panel (bg0_h)
+surface1 = [80, 73, 69]     # Surface for panels (bg2)
+overlay1 = [168, 153, 132]  # Borders and overlays (gray)
+subtext0 = [168, 153, 132]  # Dimmed text (gray)
+
 [semantic]
 # Semantic color mappings
 accent = "orange"

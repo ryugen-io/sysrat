@@ -15,6 +15,12 @@ dim_text = [140, 150, 170]  # Dimmed cyan-gray
 selection = [60, 30, 80]    # Dark purple selection
 background = [15, 15, 25]   # Very dark blue-black
 
+# Additional background colors (darker variants)
+mantle = [10, 10, 18]       # Darkest background for main panel
+surface1 = [60, 30, 80]     # Surface for panels (dark purple)
+overlay1 = [140, 150, 170]  # Borders and overlays (dimmed)
+subtext0 = [140, 150, 170]  # Dimmed text
+
 [semantic]
 # Semantic color mappings
 accent = "neon_cyan"
