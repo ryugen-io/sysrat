@@ -32,17 +32,17 @@ pub fn render_filename(state: &AppState, theme: &ThemeConfig) -> Option<Span<'st
 pub fn render_modified_indicator(state: &AppState, theme: &ThemeConfig) -> Option<Span<'static>> {
     if state.dirty {
         Some(Span::styled(
-            " [modified]",
+            " [modified] ",
             StatusLineTheme::modified_style(theme),
         ))
     } else {
-        Some(Span::styled(" [OK]", StatusLineTheme::ok_style(theme)))
+        Some(Span::styled(" [OK] ", StatusLineTheme::ok_style(theme)))
     }
 }
 
 pub fn render_status_message(state: &AppState, theme: &ThemeConfig) -> Option<Span<'static>> {
     if let Some(ref msg) = state.status_message {
-        let style = if msg.starts_with("[ERROR") {
+        let style = if msg.starts_with(" [ERROR") {
             StatusLineTheme::error_message_style(theme)
         } else {
             StatusLineTheme::status_message_style(theme)

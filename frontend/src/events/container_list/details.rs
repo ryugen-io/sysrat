@@ -15,7 +15,7 @@ pub(super) fn load_details(state: &AppState, state_rc: &Rc<RefCell<AppState>>) {
                 Ok(details) => {
                     let mut st = state_clone.borrow_mut();
                     st.container_details = Some(details);
-                    st.set_status("[OK]".to_string());
+                    st.set_status("[loaded]".to_string());
                 }
                 Err(e) => {
                     status_helper::set_status_timed(

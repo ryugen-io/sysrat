@@ -32,7 +32,7 @@ pub fn handle_keys(state: &mut AppState, state_rc: &Rc<RefCell<AppState>>, key_e
                     st.editor.load_content(fileinfo.name.clone(), content);
                     st.dirty = false;
                     st.focus = Pane::Editor;
-                    st.set_status("[OK]".to_string());
+                    st.set_status("[loaded]".to_string());
                 }
                 Err(e) => {
                     {
