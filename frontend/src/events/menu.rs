@@ -1,6 +1,6 @@
 use crate::{
     api,
-    state::{AppState, Pane, refresh},
+    state::{AppState, Pane, refresh, status_helper},
     utils,
 };
 use ratzilla::event::KeyEvent;
@@ -40,17 +40,18 @@ pub fn save_file(state: Rc<RefCell<AppState>>, filename: String, content: String
     spawn_local(async move {
         match api::save_file_content(&filename, content.clone()).await {
             Ok(_) => {
-                let mut st = state.borrow_mut();
-                st.editor.original_content = content;
-                st.dirty = false;
-                st.set_status(format!("Saved: {}", filename));
+                {
+                    let mut st = state.borrow_mut();
+                    st.editor.original_content = content;
+                    st.dirty = false;
+                }
+                status_helper::set_status_timed(&state, format!("Saved: {}", filename));
             }
             Err(e) => {
-                let mut st = state.borrow_mut();
-                st.set_status(format!(
-                    "[ERROR saving: {}]",
-                    utils::error::format_error(&e)
-                ));
+                status_helper::set_status_timed(
+                    &state,
+                    format!("[ERROR saving: {}]", utils::error::format_error(&e)),
+                );
             }
         }
     });
