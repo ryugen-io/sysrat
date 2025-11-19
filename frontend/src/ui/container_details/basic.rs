@@ -33,9 +33,14 @@ pub(super) fn add_basic_info(
     ]));
 
     if let Some(health) = &details.health {
+        let health_color = match health.as_str() {
+            "healthy" => theme.success(),
+            "unhealthy" => theme.modified(),
+            _ => theme.dim(),
+        };
         lines.push(Line::from(vec![
             Span::styled("Health: ", Style::default().fg(theme.dim())),
-            Span::styled(health.clone(), Style::default().fg(theme.success())),
+            Span::styled(health.clone(), Style::default().fg(health_color)),
         ]));
     }
     lines.push(Line::from(""));
