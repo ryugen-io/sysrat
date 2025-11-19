@@ -91,15 +91,20 @@ pub fn handle_key_event(state: Rc<RefCell<AppState>>, key_event: KeyEvent) {
         return;
     }
 
-    // Focus file list
-    if key_matches(&key_event, &keybinds.back_to_files) {
+    // Focus file list (only from FileList or Editor)
+    if key_matches(&key_event, &keybinds.back_to_files)
+        && matches!(state_mut.focus, Pane::FileList | Pane::Editor)
+    {
         state_mut.focus = Pane::FileList;
         state_mut.save_to_storage();
         return;
     }
 
-    // Ctrl+Right: Focus editor (hardcoded for now)
-    if key_event.ctrl && key_event.code == KeyCode::Right {
+    // Ctrl+Right: Focus editor (only from FileList or Editor)
+    if key_event.ctrl
+        && key_event.code == KeyCode::Right
+        && matches!(state_mut.focus, Pane::FileList | Pane::Editor)
+    {
         state_mut.focus = Pane::Editor;
         state_mut.vim_mode = crate::state::VimMode::Normal;
         state_mut.save_to_storage();

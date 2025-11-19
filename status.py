@@ -248,24 +248,23 @@ def main():
     port = config['SERVER_PORT']
 
     print()
-    print(f"{Colors.MAUVE}[status]{Colors.NC} {Icons.ROCKET}  "
-          f"Checking {display_name} status...")
+    print(f"{Colors.MAUVE}[status]{Colors.NC}   checking sysrat...")
     print()
 
     if show_server_status(config):
-        log_success("Server is running")
+        log_success("server running")
         print()
         # Get log file path for display
         app_name = 'sysrat'
         log_file = get_log_file(app_name, config)
         if not log_file.is_absolute():
             log_file = REPO_ROOT / log_file
-        log_info(f"Logs: {Colors.BLUE}tail -f {log_file}{Colors.NC}")
-        log_info(f"Stop: {Colors.BLUE}./stop.py{Colors.NC}")
+        log_info(f"logs: {Colors.BLUE}tail -f {log_file}{Colors.NC}")
+        log_info(f"stop: {Colors.BLUE}./stop.py{Colors.NC}")
     else:
-        log_error("Server is not running")
+        log_error("server not running")
         print()
-        log_info(f"Start server with: {Colors.BLUE}./start.py{Colors.NC}")
+        log_info(f"start: {Colors.BLUE}./start.py{Colors.NC}")
 
     print()
 

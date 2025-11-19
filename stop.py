@@ -73,8 +73,7 @@ def main():
         pid_file = REPO_ROOT / pid_file
 
     print()
-    print(f"{Colors.MAUVE}[stop]{Colors.NC} {Icons.STOP}  "
-          f"Stopping {display_name}...")
+    print(f"{Colors.MAUVE}[stop]{Colors.NC}   stopping sysrat...")
     print()
 
     # Check PID file
@@ -85,14 +84,14 @@ def main():
                 old_pid = int(f.read().strip())
 
             if is_running(old_pid):
-                log_info(f"Stopping server with PID {old_pid}")
+                log_info(f"stopping pid {old_pid}")
                 subprocess.run(['kill', str(old_pid)], check=True,
                                capture_output=True)
                 time.sleep(1)
 
                 # Force kill if still running
                 if is_running(old_pid):
-                    log_warn("Force killing server")
+                    log_warn("force killing")
                     subprocess.run(['kill', '-9', str(old_pid)],
                                    capture_output=True)
                     time.sleep(1)
@@ -100,15 +99,15 @@ def main():
                 if not is_running(old_pid):
                     server_stopped = True
                 else:
-                    log_error("Failed to stop server")
+                    log_error("failed to stop")
                     sys.exit(1)
             else:
-                log_warn("PID file exists but process is not running")
+                log_warn("pid file exists but process not running")
 
             pid_file.unlink()
 
         except (ValueError, IOError) as e:
-            log_error(f"Error reading PID file: {e}")
+            log_error(f"error reading pid file: {e}")
             pid_file.unlink()
     else:
         # Try to find and kill by name
@@ -117,23 +116,23 @@ def main():
                                     capture_output=True, text=True)
             if result.returncode == 0:
                 pids = result.stdout.strip().split('\n')
-                log_info(f"Found {len(pids)} running server(s), stopping...")
+                log_info(f"found {len(pids)} server(s), stopping...")
                 subprocess.run(['pkill', '-f', server_binary],
                                capture_output=True)
                 time.sleep(1)
                 server_stopped = True
             else:
-                log_warn(f"No running {display_name} found")
+                log_warn("no running server found")
                 print()
                 sys.exit(0)
         except FileNotFoundError:
-            log_warn(f"No running {display_name} found")
+            log_warn("no running server found")
             print()
             sys.exit(0)
 
     if server_stopped:
         print()
-        log_success(f"{display_name} stopped")
+        log_success("sysrat stopped")
     else:
         log_warn("server may still be running")
         log_info(f"check with: ps aux | grep {server_binary}")
