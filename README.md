@@ -4,7 +4,7 @@
 sysrat-rs/
 ├── .github/
 │   ├── logs/
-│   │   └── 20251119-105359-workflow.log
+│   │   └── 20251119-105807-workflow.log
 │   ├── skips/
 │   │   └── .skip.update-readme.example
 │   └── workflows/
@@ -180,7 +180,6 @@ sysrat-rs/
 │   │   ├── check.py
 │   │   ├── clean.py
 │   │   ├── clippy.py
-│   │   ├── debug.py
 │   │   ├── rustfmt.py
 │   │   └── test_rust.py
 │   ├── theme/
