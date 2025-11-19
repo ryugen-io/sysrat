@@ -64,7 +64,7 @@ def find_html_files(base_path: Path, recursive: bool) -> List[Path]:
     # Filter out build artifacts and dependencies
     exclude_patterns = [
         'target/', 'dist/', 'node_modules/', '.git/',
-        'vendor/', 'build/', '__pycache__/'
+        'vendor/', 'build/', '__pycache__/', '.venv'
     ]
 
     filtered_files = []

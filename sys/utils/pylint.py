@@ -180,6 +180,9 @@ def scan_files(base_path: Path, recursive: bool) -> List[Path]:
         pattern = '**/*.py' if recursive else '*.py'
         files.extend(base_path.glob(pattern))
 
+    # Filter out __pycache__, .mypy_cache, and .venv
+    files = [f for f in files if '__pycache__' not in f.parts and '.mypy_cache' not in f.parts and '.venv-dev' not in f.parts]
+
     return sorted(files)
 
 

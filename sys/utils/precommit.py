@@ -38,6 +38,48 @@ def load_env_config(repo_root: Path) -> dict:
     return config
 
 
+def ensure_dev_venv(repo_root: Path) -> Path:
+    """
+    Ensure development venv exists with required packages
+
+    Returns:
+        Path to python executable in venv
+    """
+    venv_dir = repo_root / '.venv-dev'
+    venv_python = venv_dir / 'bin' / 'python'
+    requirements = repo_root / 'requirements-dev.txt'
+
+    # Check if venv exists and is valid
+    if venv_python.exists():
+        return venv_python
+
+    # Create venv
+    print(f"{Colors.GREEN}[temp-venv]{Colors.NC} {Icons.CHECK}  created")
+    try:
+        subprocess.run(
+            [sys.executable, '-m', 'venv', str(venv_dir)],
+            check=True,
+            capture_output=True
+        )
+    except subprocess.CalledProcessError as e:
+        log_error(f"venv creation failed: {e}")
+        sys.exit(1)
+
+    # Install requirements if file exists
+    if requirements.exists():
+        try:
+            subprocess.run(
+                [str(venv_python), '-m', 'pip', 'install', '-q', '-r', str(requirements)],
+                check=True,
+                capture_output=True
+            )
+        except subprocess.CalledProcessError as e:
+            log_error(f"dependency installation failed: {e}")
+            sys.exit(1)
+
+    return venv_python
+
+
 class CheckResult:
     """Result of a single check"""
     def __init__(self, name: str, passed: bool, output: str = ""):
@@ -135,6 +177,19 @@ def extract_errors(output: str) -> List[str]:
     return error_lines[:10]  # Limit to first 10 error lines
 
 
+def cleanup_dev_venv(repo_root: Path) -> None:
+    """Remove development venv after checks complete"""
+    venv_dir = repo_root / '.venv-dev'
+
+    if venv_dir.exists():
+        import shutil
+        try:
+            shutil.rmtree(venv_dir)
+            print(f"{Colors.PEACH}[temp-venv]{Colors.NC} {Icons.WARN}  deleted")
+        except (PermissionError, OSError):
+            pass  # Ignore cleanup errors
+
+
 def main():
     """Main function"""
     import argparse
@@ -171,17 +226,20 @@ Examples:
     # Default to verbose if neither specified
     summary_mode = args.summary and not args.verbose
 
-    # Define all checks
+    # Ensure dev venv exists with dependencies
+    venv_python = str(ensure_dev_venv(REPO_ROOT))
+
+    # Define all checks (using venv python)
     checks = [
-        ("rustfmt", ["python3", "sys/rust/rustfmt.py", "--recursive"]),
-        ("clippy", ["python3", "sys/rust/clippy.py", "--recursive"]),
-        ("check", ["python3", "sys/rust/check.py", "--recursive"]),
-        ("test", ["python3", "sys/rust/test_rust.py", "--recursive"]),
-        ("pylint", ["python3", "sys/utils/pylint.py", "--recursive"]),
-        ("pycompile", ["python3", "sys/utils/pycompile.py", "--recursive"]),
-        ("htmlformat", ["python3", "sys/html/htmlformat.py", "--recursive", "--check"]),
-        ("htmllint", ["python3", "sys/html/htmllint.py", "--recursive"]),
-        ("audit", ["python3", "sys/rust/audit.py", "--recursive"]),
+        ("rustfmt", [venv_python, "sys/rust/rustfmt.py", "--recursive"]),
+        ("clippy", [venv_python, "sys/rust/clippy.py", "--recursive"]),
+        ("check", [venv_python, "sys/rust/check.py", "--recursive"]),
+        ("test", [venv_python, "sys/rust/test_rust.py", "--recursive"]),
+        ("pylint", [venv_python, "sys/utils/pylint.py", "--recursive"]),
+        ("pycompile", [venv_python, "sys/utils/pycompile.py", "--recursive"]),
+        ("htmlformat", [venv_python, "sys/html/htmlformat.py", "--recursive", "--check"]),
+        ("htmllint", [venv_python, "sys/html/htmllint.py", "--recursive"]),
+        ("audit", [venv_python, "sys/rust/audit.py", "--recursive"]),
     ]
 
     if summary_mode:
@@ -253,12 +311,17 @@ Examples:
         print()
 
         # Exit with error if any check failed
-        return 1 if failed_checks else 0
+        exit_code = 1 if failed_checks else 0
     else:
         # Verbose mode: checks already printed their output
         # Just return exit code based on results
         failed = sum(1 for r in results if not r.passed)
-        return 1 if failed > 0 else 0
+        exit_code = 1 if failed > 0 else 0
+
+    # Clean up temporary venv
+    cleanup_dev_venv(REPO_ROOT)
+
+    return exit_code
 
 
 if __name__ == '__main__':

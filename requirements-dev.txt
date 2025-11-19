@@ -1,0 +1,14 @@
+# Python Development Dependencies
+# Used by development scripts in sys/utils/ and sys/rust/
+
+# Python Linting
+flake8>=7.0.0
+pylint>=3.0.0
+mypy>=1.8.0
+
+# Python Formatting (optional)
+black>=24.0.0
+
+# Testing (if needed)
+pytest>=8.0.0
+pytest-cov>=4.1.0

@@ -92,11 +92,11 @@ class PyCacheCleaner:
                 rel_path = cache_dir
 
             if dry_run:
-                print(f"{Colors.YELLOW}{Icons.CLEAN}  {Colors.NC}{Colors.TEXT}Would remove: {Colors.NC}{Colors.SAPPHIRE}{rel_path}{Colors.NC} {Colors.SUBTEXT}({self.format_size(dir_size)}){Colors.NC}")
+                print(f"{Colors.YELLOW}{Icons.CLEAN}  {Colors.NC}would remove {Colors.SAPPHIRE}{cache_dir.name}{Colors.NC} {Colors.SUBTEXT}({self.format_size(dir_size)}){Colors.NC}")
             else:
                 try:
                     shutil.rmtree(cache_dir)
-                    print(f"{Colors.GREEN}{Icons.CLEAN}  {Colors.NC}{Colors.TEXT}Removed: {Colors.NC}{Colors.SAPPHIRE}{rel_path}{Colors.NC} {Colors.SUBTEXT}({self.format_size(dir_size)}){Colors.NC}")
+                    print(f"{Colors.GREEN}{Icons.CLEAN}  {Colors.NC}removed {Colors.SAPPHIRE}{cache_dir.name}{Colors.NC} {Colors.SUBTEXT}({self.format_size(dir_size)}){Colors.NC}")
                 except (PermissionError, OSError) as e:
                     log_error(f"Failed to remove {rel_path}: {e}")
 
@@ -109,7 +109,7 @@ class PyCacheCleaner:
         if dry_run:
             log_info("Dry run mode - no files will be deleted")
         else:
-            log_info("Scanning for Python cache directories")
+            log_info("scanning cache directories")
 
         print()
 
@@ -129,8 +129,7 @@ class PyCacheCleaner:
 
         # Print summary
         print()
-        print(f"{Colors.MAUVE}summary{Colors.NC}")
-        print()
+        print(f"{Colors.MAUVE}[summary]{Colors.NC}")
         print(f"{Colors.TEXT}Total directories:     {Colors.NC}{Colors.SAPPHIRE}{total_dirs}{Colors.NC}")
         print(f"{Colors.TEXT}Total size:            {Colors.NC}{Colors.SAPPHIRE}{self.format_size(self.total_size)}{Colors.NC}")
         print()
