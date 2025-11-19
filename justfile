@@ -124,13 +124,13 @@ rust-checks:
 
 # Run all Python checks (pylint, pycompile)
 python-checks:
-    @echo "\033[38;2;186;194;222m────────────────────────────────────────\033[0m"
+    @echo -e "\033[38;2;186;194;222m────────────────────────────────────────\033[0m"
     @python3 sys/utils/pylint.py --recursive
     @python3 sys/utils/pycompile.py --recursive
 
 # Run all HTML checks (format, lint)
 html-checks:
-    @echo "\033[38;2;186;194;222m────────────────────────────────────────\033[0m"
+    @echo -e "\033[38;2;186;194;222m────────────────────────────────────────\033[0m"
     @python3 sys/html/htmlformat.py --recursive --check
     @python3 sys/html/htmllint.py --recursive
 
@@ -139,5 +139,5 @@ all-checks: rust-checks python-checks html-checks
 
 # Pre-commit checks (all linters + tests + audit)
 pre-commit: all-checks
-    @echo "\033[38;2;186;194;222m────────────────────────────────────────\033[0m"
+    @echo -e "\033[38;2;186;194;222m────────────────────────────────────────\033[0m"
     @python3 sys/rust/audit.py --recursive
