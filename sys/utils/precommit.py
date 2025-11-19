@@ -219,7 +219,7 @@ Examples:
                 print()
 
         # Final summary
-        print(f"\n{Colors.GREEN}summary{Colors.NC}")
+        print(f"\n{Colors.GREEN}[summary]{Colors.NC}")
         passed_count = sum(1 for r in results if r.passed)
         total_count = len(results)
 
