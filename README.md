@@ -4,7 +4,7 @@
 sysrat-rs/
 ├── .github/
 │   ├── logs/
-│   │   └── 20251119-101300-workflow.log
+│   │   └── 20251119-102045-workflow.log
 │   ├── skips/
 │   │   └── .skip.update-readme.example
 │   └── workflows/
@@ -190,6 +190,7 @@ sysrat-rs/
 │       ├── cleanup_backups.py
 │       ├── fix_nerdfonts.py
 │       ├── lines.py
+│       ├── precommit.py
 │       ├── pyclean.py
 │       ├── pycompile.py
 │       ├── pylint.py
