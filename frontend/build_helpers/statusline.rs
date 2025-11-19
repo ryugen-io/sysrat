@@ -21,21 +21,19 @@ pub fn load_statusline_config() {
     });
 
     // 2. Check for user custom config (XDG override)
-    let user_layout_dir =
-        env::var("USER_LAYOUT_DIR").unwrap_or_else(|_| "~/.config/sysrat/layout".to_string());
+    let user_statusline_file = env::var("USER_STATUSLINE_FILE")
+        .unwrap_or_else(|_| "~/.config/sysrat/statusline.toml".to_string());
 
     // Expand tilde in path manually (avoid shellexpand dependency)
-    let expanded_path = if let Some(stripped) = user_layout_dir.strip_prefix("~/") {
+    let user_config_path = if let Some(stripped) = user_statusline_file.strip_prefix("~/") {
         if let Ok(home) = env::var("HOME") {
             Path::new(&home).join(stripped)
         } else {
-            Path::new(&user_layout_dir).to_path_buf()
+            Path::new(&user_statusline_file).to_path_buf()
         }
     } else {
-        Path::new(&user_layout_dir).to_path_buf()
+        Path::new(&user_statusline_file).to_path_buf()
     };
-
-    let user_config_path = expanded_path.join("statusline.toml");
 
     let final_config = if user_config_path.exists() {
         println!(

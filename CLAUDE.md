@@ -394,6 +394,11 @@ trunk build --release
    - Loads keybinds:
      - User custom from `$USER_KEYBINDS_FILE` (~/.config/sysrat/keybinds.toml)
      - Falls back to `frontend/keybinds.toml` if user file doesn't exist
+   - Loads statusline layout:
+     - User custom from `$USER_STATUSLINE_FILE` (~/.config/sysrat/statusline.toml)
+     - Falls back to `sys/layout/statusline.toml` if user file doesn't exist
+   - Scans ASCII art:
+     - User custom from `$USER_ASCII_DIR` (~/.config/sysrat/ascii/)
    - Injects colors, fonts, and keybinds as compile-time environment variables
    - Sets build date and git hash
 2. Trunk compiles Rust to WASM with embedded configurations
@@ -403,6 +408,8 @@ trunk build --release
 **XDG-Extensible Components** (detected at build time):
 - ✅ Themes: `~/.config/sysrat/themes/*.toml`
 - ✅ Keybinds: `~/.config/sysrat/keybinds.toml`
+- ✅ Statusline: `~/.config/sysrat/statusline.toml`
+- ✅ ASCII Art: `~/.config/sysrat/ascii/*.ascii`
 - ✅ Main Config: `~/.config/sysrat/sysrat.toml` (loaded at runtime by server)
 
 ### Additional Justfile Commands
@@ -591,6 +598,8 @@ The project uses environment files for build-time and runtime configuration. The
 - `RUST_TOOLCHAIN` - Rust version to use
 - `USER_THEME_DIR` - Path to user custom themes (~/.config/sysrat/themes)
 - `USER_KEYBINDS_FILE` - Path to user custom keybinds (~/.config/sysrat/keybinds.toml)
+- `USER_STATUSLINE_FILE` - Path to user custom statusline (~/.config/sysrat/statusline.toml)
+- `USER_ASCII_DIR` - Path to user custom ASCII art (~/.config/sysrat/ascii)
 - `THEME_DIR`, `THEME_PYTHON`, `THEME_BASH` - Theme system paths
 - `XDG_CONFIG_HOME`, `XDG_STATE_HOME` - XDG directory overrides
 
@@ -781,6 +790,21 @@ Users can override system defaults by placing files in XDG directories. The buil
 - Loaded by `frontend/build.rs` at compile time
 - Falls back to `frontend/keybinds.toml` if user file doesn't exist
 - Allows per-user keybind customization without modifying repository
+
+**Custom Statusline** (User-Extensible):
+```bash
+~/.config/sysrat/statusline.toml  # Override default statusline layout
+```
+- Loaded by `frontend/build.rs` at compile time
+- Falls back to `sys/layout/statusline.toml` if user file doesn't exist
+- Allows per-user statusline customization
+
+**Custom ASCII Art** (User-Extensible):
+```bash
+~/.config/sysrat/ascii/*.ascii  # Add custom ASCII art files
+```
+- Scanned by `frontend/build.rs` at compile time
+- Automatically embedded alongside built-in ASCII art
 
 **Custom Main Configuration** (User-Extensible):
 ```bash
