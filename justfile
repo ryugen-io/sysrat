@@ -117,24 +117,27 @@ htmlformat-check:
 
 # Run all Rust checks (fmt, clippy, check, test)
 rust-checks:
-    python3 sys/rust/rustfmt.py --recursive
-    python3 sys/rust/clippy.py --recursive
-    python3 sys/rust/check.py --recursive
-    python3 sys/rust/test_rust.py --recursive
+    @python3 sys/rust/rustfmt.py --recursive
+    @python3 sys/rust/clippy.py --recursive
+    @python3 sys/rust/check.py --recursive
+    @python3 sys/rust/test_rust.py --recursive
 
 # Run all Python checks (pylint, pycompile)
 python-checks:
-    python3 sys/utils/pylint.py --recursive
-    python3 sys/utils/pycompile.py --recursive
+    @echo "\033[38;2;186;194;222m────────────────────────────────────────\033[0m"
+    @python3 sys/utils/pylint.py --recursive
+    @python3 sys/utils/pycompile.py --recursive
 
 # Run all HTML checks (format, lint)
 html-checks:
-    python3 sys/html/htmlformat.py --recursive --check
-    python3 sys/html/htmllint.py --recursive
+    @echo "\033[38;2;186;194;222m────────────────────────────────────────\033[0m"
+    @python3 sys/html/htmlformat.py --recursive --check
+    @python3 sys/html/htmllint.py --recursive
 
 # Run all checks (Rust + Python + HTML)
 all-checks: rust-checks python-checks html-checks
 
 # Pre-commit checks (all linters + tests + audit)
 pre-commit: all-checks
-    python3 sys/rust/audit.py --recursive
+    @echo "\033[38;2;186;194;222m────────────────────────────────────────\033[0m"
+    @python3 sys/rust/audit.py --recursive
