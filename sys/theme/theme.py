@@ -10,8 +10,9 @@ PYLINTCHECK_IGNORE - Theme module, different formatting standards
 
 class Colors:
     RED = '\033[38;2;243;139;168m'        # #f38ba8 - Errors
+    PEACH = '\033[38;2;250;179;135m'      # #fab387 - Warnings/Important
     GREEN = '\033[38;2;166;227;161m'      # #a6e3a1 - Success
-    YELLOW = '\033[38;2;249;226;175m'     # #f9e2af - Warnings
+    YELLOW = '\033[38;2;249;226;175m'     # #f9e2af - Warnings (light)
     BLUE = '\033[38;2;137;180;250m'       # #89b4fa - Info
     MAUVE = '\033[38;2;203;166;247m'      # #cba6f7 - Headers
     SAPPHIRE = '\033[38;2;116;199;236m'   # #74c7ec - Success highlights

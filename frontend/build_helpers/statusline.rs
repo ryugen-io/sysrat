@@ -4,7 +4,7 @@ use std::path::Path;
 
 pub fn load_statusline_config() {
     // Theme colors (Catppuccin Mocha)
-    const YELLOW: &str = "\x1b[38;2;249;226;175m"; // Warning color
+    const PEACH: &str = "\x1b[38;2;250;179;135m"; // Warning color
     const BLUE: &str = "\x1b[38;2;137;180;250m";
     const NC: &str = "\x1b[0m";
     const INFO_ICON: &str = "\u{f05a}"; //
@@ -16,7 +16,7 @@ pub fn load_statusline_config() {
     let builtin_config = fs::read_to_string(&builtin_path).unwrap_or_else(|e| {
         panic!(
             "{}[statusline]{} failed to read built-in config at {:?}: {}",
-            YELLOW, NC, builtin_path, e
+            PEACH, NC, builtin_path, e
         )
     });
 
@@ -40,18 +40,18 @@ pub fn load_statusline_config() {
     let final_config = if user_config_path.exists() {
         println!(
             "cargo:warning={}[statusline]{} {}{}  {}using user custom config: {:?}",
-            YELLOW, NC, BLUE, INFO_ICON, NC, user_config_path
+            PEACH, NC, BLUE, INFO_ICON, NC, user_config_path
         );
         fs::read_to_string(&user_config_path).unwrap_or_else(|e| {
             panic!(
                 "{}[statusline]{} failed to read user config at {:?}: {}",
-                YELLOW, NC, user_config_path, e
+                PEACH, NC, user_config_path, e
             )
         })
     } else {
         println!(
             "cargo:warning={}[statusline]{} {}{}  {}using built-in config: {:?}",
-            YELLOW, NC, BLUE, INFO_ICON, NC, builtin_path
+            PEACH, NC, BLUE, INFO_ICON, NC, builtin_path
         );
         builtin_config
     };
