@@ -4,7 +4,7 @@
 sysrat-rs/
 ├── .github/
 │   ├── logs/
-│   │   └── 20251119-200935-workflow.log
+│   │   └── 20260111-210247-workflow.log
 │   ├── skips/
 │   │   └── .skip.update-readme.example
 │   └── workflows/
@@ -14,6 +14,31 @@ sysrat-rs/
 │       │   └── update_readme.py
 │       ├── check-skip.yml
 │       └── update-readme.yml
+├── .serena/
+│   ├── memories/
+│   │   ├── code_style_and_conventions.md
+│   │   ├── codebase_structure.md
+│   │   ├── project_overview.md
+│   │   ├── suggested_commands.md
+│   │   └── task_completion_checklist.md
+│   └── project.yml
+├── core/
+│   ├── src/
+│   │   ├── config/
+│   │   │   ├── app_config.rs
+│   │   │   ├── mod.rs
+│   │   │   ├── models.rs
+│   │   │   └── scanner.rs
+│   │   ├── configs/
+│   │   │   ├── actions.rs
+│   │   │   ├── mod.rs
+│   │   │   └── validation.rs
+│   │   ├── containers/
+│   │   │   ├── actions.rs
+│   │   │   └── mod.rs
+│   │   ├── lib.rs
+│   │   └── types.rs
+│   └── Cargo.toml
 ├── frontend/
 │   ├── assets/
 │   │   ├── menu-text.ascii
@@ -71,6 +96,7 @@ sysrat-rs/
 │   │   │   ├── menu.rs
 │   │   │   ├── mod.rs
 │   │   │   ├── pane.rs
+│   │   │   ├── splash.rs
 │   │   │   └── status_helper.rs
 │   │   ├── storage/
 │   │   │   ├── generic.rs
@@ -118,7 +144,8 @@ sysrat-rs/
 │   │   │   ├── container_list.rs
 │   │   │   ├── editor.rs
 │   │   │   ├── file_list.rs
-│   │   │   └── mod.rs
+│   │   │   ├── mod.rs
+│   │   │   └── splash.rs
 │   │   ├── utils/
 │   │   │   ├── error.rs
 │   │   │   └── mod.rs
@@ -141,16 +168,10 @@ sysrat-rs/
 │   └── keybinds.toml
 ├── server/
 │   ├── src/
-│   │   ├── config/
-│   │   │   ├── app_config.rs
-│   │   │   ├── mod.rs
-│   │   │   ├── models.rs
-│   │   │   └── scanner.rs
 │   │   ├── routes/
 │   │   │   ├── configs/
 │   │   │   │   ├── handlers.rs
-│   │   │   │   ├── mod.rs
-│   │   │   │   └── validation.rs
+│   │   │   │   └── mod.rs
 │   │   │   ├── containers/
 │   │   │   │   ├── parser/
 │   │   │   │   │   ├── basic.rs
@@ -198,7 +219,6 @@ sysrat-rs/
 │       └── xdg_paths.py
 ├── Cargo.lock
 ├── Cargo.toml
-├── CLAUDE.md
 ├── DEBUG.md
 ├── deny.toml
 ├── justfile
